@@ -9,8 +9,12 @@ import history from './store/history';
 import routes from './store/routes';
 import configureStore from './store/configureStore';
 
+import {fetchCards} from './actions/cards';
+
 const store = configureStore({});
 syncReduxAndRouter(history, store);
+
+store.dispatch(fetchCards());
 
 ReactDOM.render(
   <div>
@@ -22,4 +26,3 @@ ReactDOM.render(
   </div>,
   document.getElementById('root')
 );
-

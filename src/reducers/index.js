@@ -1,12 +1,12 @@
 import { combineReducers } from 'redux';
 import { routeReducer } from 'redux-simple-router';
 import { reducer as formReducer } from 'redux-form';
-import counter from './counter';
+import zine from './zine';
 import session from './session';
 
 const rootReducer = combineReducers({
   session,
-  counter,
+  zine,
   routing: routeReducer,
   form: formReducer,
 });

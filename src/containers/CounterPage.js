@@ -3,13 +3,13 @@ import { connect } from 'react-redux';
 
 import { increment, decrement } from '../actions/counter';
 
-import Counter from '../components/counter/Counter';
+import Zine from '../components/zine/Zine';
 import Container from '../components/ui/Container';
 import Column from '../components/ui/Column';
 
 function mapStateToProps(state) {
   return {
-    counter: state.counter.get('count'),
+    markdown: state.zine.get('markdown'),
   };
 }
 
@@ -20,14 +20,12 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-const CounterPage = ({ counter, increaseCounter, decreaseCounter }) => {
+const CounterPage = ({ markdown, increaseCounter, decreaseCounter }) => {
   return (
     <Container>
-      <Column className="col-4">
-        <h1 className="center">Counter</h1>
-
-        <Counter
-          counter={ counter }
+      <Column className="col-12">
+        <Zine
+          markdown={ markdown }
           increment={ increaseCounter }
           decrement={ decreaseCounter } />
       </Column>
