@@ -1,4 +1,5 @@
 import R from 'ramda';
+import Q from 'q';
 
 const get = (path) => new Promise((resolve, reject) => {
   Trello.get(path, resolve, reject);
@@ -30,6 +31,16 @@ const addFormatting = (card) => R.merge(card, {
   body: card.desc && prepare(card.desc),
 });
 
+const addAttachmentURLs = (card) => {
+  if (card.idAttachmentCover) {
+    return get(`/cards/${card.id}/attachments/${card.idAttachmentCover}`)
+      .then(attachment => R.merge(card, {
+        image: attachment.url,
+      }));
+  }
+  return Q.when(card);
+};
+
 // const formatCard = (card) => card.isSectionHeading ?
 //   `## ${card.title}\n\n_Section edited by [[${card.byline}]]_.`
 //   : `__${prepare(addPeriodIfMissing(card.name))}__ ${prepare(card.desc)}`;
@@ -45,6 +56,7 @@ const makeSectionCard = (list) => ({
   title: list.name.split('/')[0],
   byline: list.name.split('/')[1],
 });
+
 
 const getList = (list) => get(`/lists/${list.id}/cards`)
   .then((cards) => cards.length ?
@@ -66,6 +78,8 @@ const getCards = R.pipeP(
   R.flatten,
   R.reject(hasLabel('Hold')),
   R.map(addFormatting),
+  R.map(addAttachmentURLs),
+  Q.all,
   log('Final'),
   // (renderedCards) => renderedCards.join('\n\n'),
 );

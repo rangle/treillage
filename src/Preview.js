@@ -35,7 +35,13 @@ _Section edited by ${ formatByline(item.byline) }._
 
 `;
 
-const formatItem = (item) => `
+const addImageUrl = (item) => item.image ? `
+
+![Item cover image](${item.image})
+
+` : '';
+
+const formatItem = (item) => `${addImageUrl(item)}
 
 __${item.title}__ ${(item.body || 'Why no body???').replace(/\n/g, ' ')}
 
