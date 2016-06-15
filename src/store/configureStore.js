@@ -4,7 +4,7 @@ import persistState from 'redux-localstorage';
 import thunk from 'redux-thunk';
 import promiseMiddleware from '../middleware/promiseMiddleware';
 import logger from './logger';
-import rootReducer from '../reducers';
+import rootReducer from '../rootReducer';
 
 const storageConfig = {
   key: 'react-redux-seed',
@@ -26,8 +26,8 @@ function configureStore(initialState) {
   )(createStore)(rootReducer, initialState);
 
   if (module.hot) {
-    module.hot.accept('../reducers', () => {
-      const nextRootReducer = require('../reducers');
+    module.hot.accept('../rootReducer', () => {
+      const nextRootReducer = require('../rootReducer');
       store.replaceReducer(nextRootReducer);
     });
   }

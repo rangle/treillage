@@ -9,7 +9,7 @@ export const LOGOUT_USER = 'App/LOGOUT_USER';
 
 export const FETCH_CARDS = 'App/FETCH_CARDS';
 
-export const SET_MARKDOWN = 'App/SET_MARKDOWN';
+export const SET_CONTENT = 'App/SET_CONTENT';
 
 export const FORM_RESET = 'redux-form/RESET';
 

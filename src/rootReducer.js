@@ -1,12 +1,10 @@
 import { combineReducers } from 'redux';
 import { routeReducer } from 'redux-simple-router';
 import { reducer as formReducer } from 'redux-form';
-import zine from './zine';
-import session from './session';
+import trello from './trello.reducer';
 
 const rootReducer = combineReducers({
-  session,
-  zine,
+  trello,
   routing: routeReducer,
   form: formReducer,
 });

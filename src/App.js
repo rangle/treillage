@@ -1,12 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import Navigator from '../components/navigator/Navigator';
-import NavigatorItem from '../components/navigator/NavigatorItem';
-import Content from '../components/ui/Content';
+import Navigator from './components/navigator/Navigator';
+import NavigatorItem from './components/navigator/NavigatorItem';
+import Content from './components/ui/Content';
 
 function mapStateToProps(state) {
   return {
-    session: state.session,
     router: state.router,
   };
 }
@@ -21,7 +20,7 @@ const App = ({ children }) => {
       <Navigator>
         <div className="flex flex-auto">
           <NavigatorItem className="p1">
-            <span className="red bold">Delivery Weekly</span>
+            <span className="red bold">Rangle Weekly Preview</span>
           </NavigatorItem>
         </div>
       </Navigator>

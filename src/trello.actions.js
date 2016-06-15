@@ -1,5 +1,5 @@
-import { FETCH_CARDS, SET_MARKDOWN, BOARD_ID } from '../constants';
-import trello from '../data/trello';
+import { FETCH_CARDS, SET_CONTENT, BOARD_ID } from './constants';
+import trello from './trello.api';
 
 function makeFetchAction(status, data) {
   return {
@@ -11,11 +11,11 @@ function makeFetchAction(status, data) {
   };
 }
 
-function makeSetMarkdownAction(markdown) {
+function makeSetContentAction(content) {
   return {
-    type: SET_MARKDOWN,
+    type: SET_CONTENT,
     payload: {
-      markdown,
+      content,
     },
   };
 }
@@ -31,7 +31,7 @@ export function fetchCards() {
     const authenticationSuccess = () => {
       dispatch(makeFetchAction('authenticated'));
       trello.getCards(BOARD_ID)
-        .then((markdown) => dispatch(makeSetMarkdownAction(markdown)))
+        .then((content) => dispatch(makeSetContentAction(content)))
         .catch(apiFailure);
     };
 

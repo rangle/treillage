@@ -9,7 +9,7 @@ import history from './store/history';
 import routes from './store/routes';
 import configureStore from './store/configureStore';
 
-import {fetchCards} from './actions/cards';
+import {fetchCards} from './trello.actions';
 
 const store = configureStore({});
 syncReduxAndRouter(history, store);

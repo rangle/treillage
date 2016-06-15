@@ -25,9 +25,14 @@ const addPeriodIfMissing = (string) => {
     : trimmed;
 };
 
-const formatCard = (card) => card.isSectionHeading ?
-  `## ${card.title}\n\n_Section edited by [[${card.byline}]]_.`
-  : `__${prepare(addPeriodIfMissing(card.name))}__ ${prepare(card.desc)}`;
+const addFormatting = (card) => R.merge(card, {
+  title: card.title || prepare(addPeriodIfMissing(card.name)),
+  body: card.desc && prepare(card.desc),
+});
+
+// const formatCard = (card) => card.isSectionHeading ?
+//   `## ${card.title}\n\n_Section edited by [[${card.byline}]]_.`
+//   : `__${prepare(addPeriodIfMissing(card.name))}__ ${prepare(card.desc)}`;
 
 const log = (heading) => (item) => {
   /* eslint no-console: 0 */
@@ -42,7 +47,10 @@ const makeSectionCard = (list) => ({
 });
 
 const getList = (list) => get(`/lists/${list.id}/cards`)
-  .then((cards) => R.flatten([makeSectionCard(list), cards]));
+  .then((cards) => cards.length ?
+    R.flatten([makeSectionCard(list), cards])
+    : []
+  );
 
 const hasLabel = (targetLabel) => (card) => R.contains(
   targetLabel,
@@ -57,8 +65,9 @@ const getCards = R.pipeP(
   (listOfPromises) => Promise.all(listOfPromises),
   R.flatten,
   R.reject(hasLabel('Hold')),
-  R.map(formatCard),
-  (renderedCards) => renderedCards.join('\n\n'),
+  R.map(addFormatting),
+  log('Final'),
+  // (renderedCards) => renderedCards.join('\n\n'),
 );
 
 const authorize = ({onSuccess, onFailure}) => {
