@@ -53,6 +53,7 @@
     "immutable": "^3.7.5",
     "json-loader": "^0.5.3",
     "marked": "^0.3.5",
+    "moment": "^2.13.0",
     "postcss-loader": "^0.8.0",
     "radium": "^0.14.3",
     "ramda": "^0.19.1",
