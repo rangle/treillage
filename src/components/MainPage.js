@@ -2,8 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import Preview from './Preview';
-import Container from './components/ui/Container';
-import Column from './components/ui/Column';
+import Container from './ui/Container';
+import Column from './ui/Column';
 
 function mapStateToProps(state) {
   return {
