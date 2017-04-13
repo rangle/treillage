@@ -2,6 +2,8 @@ import React from 'react';
 import marked from 'marked';
 import moment from 'moment';
 
+import { PASS } from '../services/rules';
+
 marked.setOptions({
   renderer: new marked.Renderer(),
   gfm: true,
@@ -48,12 +50,10 @@ __${item.title}__ ${(item.body || '- Empty Body -').replace(/\n/g, ' ')}
 
 `;
 
-const Markdown = ({ key, markdown, message, render }) => render ?
+const Markdown = ({ key, markdown, render }) => render ?
   (
-    <div key={key}>
-      <div dangerouslySetInnerHTML= {{ __html: marked(replaceWikiLinks(markdown)) }} />
-      <sub dangerouslySetInnerHTML={{ __html: message }} />
-    </div>
+    <div key={key}
+      dangerouslySetInnerHTML= {{ __html: marked(replaceWikiLinks(markdown)) }} />
   ) : (
     <pre style={{ 'white-space': 'pre-wrap' }}>{ markdown }</pre>
   );
@@ -62,22 +62,25 @@ const Section = ({ item, render }) => (
   <Markdown key={ item.title }
     render={ render }
     markdown={ formatSectionHeader(item) }
-    message={item.message}
    />
 );
 
 const Body = ({ item, render }) => {
+  const bgColor = item.message === PASS ? 'white' : 'pink';
+
   return (
     <div key={ item.title } style = {{
-      'backgroundColor': 'white',
+      'backgroundColor': bgColor,
       'border': '1px solid gray',
       'padding': '1em',
     }} >
       <Markdown key={ item.title }
         render={ render }
         markdown={ formatItem(item) }
-        message={item.message}
        />
+       {item.message === PASS
+       ? <sub style={{'color': 'green'}} dangerouslySetInnerHTML= {{ __html: PASS }} />
+       : <sub style={{'color': 'red'}} dangerouslySetInnerHTML= {{ __html: item.message }} />}
     </div>
   );
 };
