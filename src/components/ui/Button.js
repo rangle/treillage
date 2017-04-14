@@ -7,6 +7,7 @@ const Button = (props) => {
     style = {},
     type = 'button',
     onClick,
+    disabled,
   } = props;
 
   return (
@@ -14,7 +15,8 @@ const Button = (props) => {
       type={ type }
       className={ `btn btn-primary  ${ className }` }
       style={{ ...styles.base, ...style }}
-      onClick={ onClick }>
+      onClick={ onClick }
+      disabled={ disabled } >
       { children }
     </button>
   );
@@ -30,12 +32,14 @@ Button.propTypes = {
   style: React.PropTypes.object,
   type: React.PropTypes.string,
   onClick: React.PropTypes.func,
+  disabled: React.PropTypes.bool,
 };
 
 Button.defaultProps = {
   className: '',
   type: 'button',
   style: {},
+  disabled: true,
 };
 
 

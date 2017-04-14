@@ -1,6 +1,9 @@
 import React from 'react';
 import marked from 'marked';
 import moment from 'moment';
+import trello from '../services/api';
+
+import Button from './ui/Button';
 
 import { PASS } from '../services/rules';
 
@@ -81,6 +84,12 @@ const Body = ({ item, render }) => {
        {item.message === PASS
        ? <sub style={{'color': 'green'}} dangerouslySetInnerHTML= {{ __html: PASS }} />
        : <sub style={{'color': 'red'}} dangerouslySetInnerHTML= {{ __html: item.message }} />}
+      {' '}
+      <Button
+        onClick={ () => trello.updateCard(item.id) }
+        disabled={ item.message !== PASS } >
+        Looks good!
+      </Button>
     </div>
   );
 };
