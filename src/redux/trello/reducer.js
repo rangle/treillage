@@ -1,4 +1,4 @@
-import { SET_CONTENT } from './constants';
+import { SET_CONTENT } from '../constants';
 import { fromJS } from 'immutable';
 
 const INITIAL_STATE = fromJS({

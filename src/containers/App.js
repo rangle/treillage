@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import Navigator from './components/navigator/Navigator';
-import NavigatorItem from './components/navigator/NavigatorItem';
-import Content from './components/ui/Content';
+import Navigator from '../components/navigator/Navigator';
+import NavigatorItem from '../components/navigator/NavigatorItem';
+import Content from '../components/ui/Content';
 
 function mapStateToProps(state) {
   return {

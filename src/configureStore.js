@@ -2,9 +2,9 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import { fromJS } from 'immutable';
 import persistState from 'redux-localstorage';
 import thunk from 'redux-thunk';
-import promiseMiddleware from '../middleware/promiseMiddleware';
-import logger from './logger';
-import rootReducer from '../rootReducer';
+import promiseMiddleware from './middleware/promiseMiddleware';
+import logger from './redux/logger';
+import rootReducer from './redux/rootReducer';
 
 const storageConfig = {
   key: 'react-redux-seed',
@@ -26,8 +26,8 @@ function configureStore(initialState) {
   )(createStore)(rootReducer, initialState);
 
   if (module.hot) {
-    module.hot.accept('../rootReducer', () => {
-      const nextRootReducer = require('../rootReducer');
+    module.hot.accept('./redux/rootReducer', () => {
+      const nextRootReducer = require('./redux/rootReducer');
       store.replaceReducer(nextRootReducer);
     });
   }

@@ -1,6 +1,8 @@
 import R from 'ramda';
 import Q from 'q';
 
+import rules from './rules';
+
 const get = (path) => new Promise((resolve, reject) => {
   Trello.get(path, resolve, reject);
 });
@@ -24,6 +26,14 @@ const addPeriodIfMissing = (string) => {
   return hasEndOfSentencePunctuation(trimmed) ?
     trimmed + '.'
     : trimmed;
+};
+
+const validate = (card) => {
+  rules.forEach(rule => {
+    const message = rule(card);
+    card.message = message;
+  });
+  return card;
 };
 
 const addFormatting = (card) => R.merge(card, {
@@ -77,6 +87,7 @@ const getCards = R.pipeP(
   (listOfPromises) => Promise.all(listOfPromises),
   R.flatten,
   R.reject(hasLabel('Hold')),
+  R.map(validate),
   R.map(addFormatting),
   R.map(addAttachmentURLs),
   Q.all,
@@ -84,7 +95,7 @@ const getCards = R.pipeP(
   // (renderedCards) => renderedCards.join('\n\n'),
 );
 
-const authorize = ({onSuccess, onFailure}) => {
+const authorize = ({ onSuccess, onFailure }) => {
   /* eslint no-console: 0 */
   console.log('Authorizing trello');
   Trello.authorize({
@@ -104,4 +115,3 @@ export default {
   getCards,
   authorize,
 };
-

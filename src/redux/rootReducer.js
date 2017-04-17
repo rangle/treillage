@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 import { routeReducer } from 'redux-simple-router';
 import { reducer as formReducer } from 'redux-form';
-import trello from './trello.reducer';
+import trello from './trello/reducer';
 
 const rootReducer = combineReducers({
   trello,

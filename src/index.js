@@ -5,11 +5,11 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { syncReduxAndRouter } from 'redux-simple-router';
 import { Router } from 'react-router';
-import history from './store/history';
-import routes from './store/routes';
-import configureStore from './store/configureStore';
+import history from './redux/history';
+import routes from './routes';
+import configureStore from './configureStore';
 
-import {fetchCards} from './trello.actions';
+import { fetchCards } from './redux/trello/actions';
 
 const store = configureStore({});
 syncReduxAndRouter(history, store);

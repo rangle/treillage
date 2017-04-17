@@ -1,5 +1,5 @@
-import { FETCH_CARDS, SET_CONTENT, BOARD_ID } from './constants';
-import trello from './trello.api';
+import { FETCH_CARDS, SET_CONTENT, BOARD_ID } from '../constants';
+import trello from '../../services/api';
 
 function makeFetchAction(status, data) {
   return {

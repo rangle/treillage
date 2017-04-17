@@ -2,7 +2,10 @@ import React from 'react';
 import marked from 'marked';
 import moment from 'moment';
 
+import { PASS } from '../services/rules';
+
 marked.setOptions({
+  renderer: new marked.Renderer(),
   gfm: true,
   smartypants: false,
 });
@@ -43,7 +46,7 @@ const addImageUrl = (item) => item.image ? `
 
 const formatItem = (item) => `${addImageUrl(item)}
 
-__${item.title}__ ${(item.body || 'Why no body???').replace(/\n/g, ' ')}
+__${item.title}__ ${(item.body || '- Empty Body -').replace(/\n/g, ' ')}
 
 `;
 
@@ -58,35 +61,26 @@ const Markdown = ({ key, markdown, render }) => render ?
 const Section = ({ item, render }) => (
   <Markdown key={ item.title }
     render={ render }
-    markdown={ formatSectionHeader(item) } />
+    markdown={ formatSectionHeader(item) }
+   />
 );
 
-const countWords = (item) => (item.title + ' ' + item.body).split(' ').length;
-
-const Body = ({ item, render}) => {
-  const length = countWords(item);
-  const isTooLong = length > 100;
-  const bgColor = isTooLong ? 'pink' : 'white';
+const Body = ({ item, render }) => {
+  const bgColor = item.message === PASS ? 'white' : 'pink';
 
   return (
     <div key={ item.title } style = {{
-      'background-color': bgColor,
+      'backgroundColor': bgColor,
       'border': '1px solid gray',
       'padding': '1em',
     }} >
       <Markdown key={ item.title }
         render={ render }
-        length
-        markdown = { formatItem(item) } />
-
-      { render ?
-          <i>{
-            isTooLong ?
-              `${ length } words. Please shorten!`
-              : `${ length } words.`
-          }</i>
-          : ''
-      }
+        markdown={ formatItem(item) }
+       />
+       {item.message === PASS
+       ? <sub style={{'color': 'green'}} dangerouslySetInnerHTML= {{ __html: PASS }} />
+       : <sub style={{'color': 'red'}} dangerouslySetInnerHTML= {{ __html: item.message }} />}
     </div>
   );
 };
@@ -94,21 +88,14 @@ const Body = ({ item, render}) => {
 const Zine = ({ content }) => (
   <div style={{ fontSize: '14pt' }}>
 
-    { content.map((item) => item.isSectionHeading ?
-      (<Section render item = { item } />)
-      : (<Body render item = { item } />)
+    { content.map((item, i) => item.isSectionHeading ?
+      (<Section key={`item-${i}`} render item={ item } />)
+      : (<Body key={`item-${i}`} render item={ item } />)
     )}
 
     <br/>
     <hr/>
-
-    _{moment().day(1).format('MMMM D')}–{moment().day(5).format('D')}._
-
-    { content.map((item) => item.isSectionHeading ?
-      (<Section item = { item } />)
-      : (<Body item = { item } />)
-    )}
-
+    <sub dangerouslySetInnerHTML= {{ __html: marked(`_${moment().day(1).format('MMMM D')}-${moment().day(5).format('D')}._`) }} />
   </div>
 );
 
