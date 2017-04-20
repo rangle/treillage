@@ -36,6 +36,19 @@ const validate = (card) => {
   return card;
 };
 
+const getEditor = () => {
+  return Trello.rest('GET', 'members/me')
+  .then(
+    me => me,
+    error => console.error(error));
+};
+
+const filterByEditor = async (lists) => {
+  const editor = await getEditor();
+
+  return lists.filter(list => new RegExp(editor.fullName).test(list.name));
+};
+
 const addFormatting = (card) => R.merge(card, {
   title: card.title || prepare(addPeriodIfMissing(card.name)),
   body: card.desc && prepare(card.desc),
@@ -55,11 +68,11 @@ const addAttachmentURLs = (card) => {
 //   `## ${card.title}\n\n_Section edited by [[${card.byline}]]_.`
 //   : `__${prepare(addPeriodIfMissing(card.name))}__ ${prepare(card.desc)}`;
 
-const log = (heading) => (item) => {
-  /* eslint no-console: 0 */
-  console.log(heading, item);
-  return item;
-};
+// const log = (heading) => (item) => {
+//   /* eslint no-console: 0 */
+//   console.log(heading, item);
+//   return item;
+// };
 
 const makeSectionCard = (list) => ({
   isSectionHeading: true,
@@ -79,19 +92,31 @@ const hasLabel = (targetLabel) => (card) => R.contains(
   R.map((label) => label.name, card.labels || []), // all label names
 );
 
-const getCards = R.pipeP(
+const getMyCards = R.pipeP(
   (boardId) => get(`/boards/${boardId}/lists`),
-  log('Got results'),
   R.filter((list) => list.name[0] !== '#'),
+  (lists) => (filterByEditor(lists)),
   R.map(getList),
   (listOfPromises) => Promise.all(listOfPromises),
   R.flatten,
-  R.reject(hasLabel('Hold')),
+  R.reject(hasLabel('HOLD')),
   R.map(validate),
   R.map(addFormatting),
   R.map(addAttachmentURLs),
   Q.all,
-  log('Final'),
+);
+
+const getAllCards = R.pipeP(
+  (boardId) => get(`/boards/${boardId}/lists`),
+  R.filter((list) => list.name[0] !== '#'),
+  R.map(getList),
+  (listOfPromises) => Promise.all(listOfPromises),
+  R.flatten,
+  R.reject(hasLabel('HOLD')),
+  R.map(validate),
+  R.map(addFormatting),
+  R.map(addAttachmentURLs),
+  Q.all,
   // (renderedCards) => renderedCards.join('\n\n'),
 );
 
@@ -111,7 +136,8 @@ const authorize = ({ onSuccess, onFailure }) => {
   });
 };
 
-export default {
-  getCards,
+export {
+  getAllCards,
+  getMyCards,
   authorize,
 };

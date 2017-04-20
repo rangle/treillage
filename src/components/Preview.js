@@ -1,6 +1,7 @@
 import React from 'react';
 import marked from 'marked';
 import moment from 'moment';
+import { Menu } from 'semantic-ui-react';
 
 import { PASS } from '../services/rules';
 
@@ -50,16 +51,16 @@ __${item.title}__ ${(item.body || '- Empty Body -').replace(/\n/g, ' ')}
 
 `;
 
-const Markdown = ({ key, markdown, render }) => render ?
+const Markdown = ({ markdown, render }) => render ?
   (
-    <div key={key}
+    <div
       dangerouslySetInnerHTML= {{ __html: marked(replaceWikiLinks(markdown)) }} />
   ) : (
     <pre style={{ 'white-space': 'pre-wrap' }}>{ markdown }</pre>
   );
 
 const Section = ({ item, render }) => (
-  <Markdown key={ item.title }
+  <Markdown
     render={ render }
     markdown={ formatSectionHeader(item) }
    />
@@ -69,12 +70,12 @@ const Body = ({ item, render }) => {
   const bgColor = item.message === PASS ? 'white' : 'pink';
 
   return (
-    <div key={ item.title } style = {{
+    <div style = {{
       'backgroundColor': bgColor,
       'border': '1px solid gray',
       'padding': '1em',
     }} >
-      <Markdown key={ item.title }
+      <Markdown
         render={ render }
         markdown={ formatItem(item) }
        />
@@ -85,18 +86,25 @@ const Body = ({ item, render }) => {
   );
 };
 
-const Zine = ({ content }) => (
-  <div style={{ fontSize: '14pt' }}>
+const Zine = ({ content, fetchAllCards, fetchMyCards }) => {
+  return (
+    <div style={{ fontSize: '14pt' }}>
+      <Menu pointing secondary>
+        <Menu.Item name="all cards" onClick={fetchAllCards} />
+        <Menu.Item name="my cards" onClick={fetchMyCards} />
+      </Menu>
 
-    { content.map((item, i) => item.isSectionHeading ?
-      (<Section key={`item-${i}`} render item={ item } />)
-      : (<Body key={`item-${i}`} render item={ item } />)
-    )}
+      { content.map((item, i) => item.isSectionHeading ?
+        (<Section key={`item-${i}`} render item={ item } />)
+        : (<Body key={`item-${i}`} render item={ item } />)
+      )}
+      { content.length === 0 && <em>No cards to show.</em> }
 
-    <br/>
-    <hr/>
-    <sub dangerouslySetInnerHTML= {{ __html: marked(`_${moment().day(1).format('MMMM D')}-${moment().day(5).format('D')}._`) }} />
-  </div>
-);
+      <br/>
+      <hr/>
+      <sub dangerouslySetInnerHTML= {{ __html: marked(`_${moment().day(1).format('MMMM D')}-${moment().day(5).format('D')}._`) }} />
+    </div>
+  );
+};
 
 export default Zine;
