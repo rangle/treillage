@@ -95,7 +95,7 @@ const hasLabel = (targetLabel) => (card) => R.contains(
 const getMyCards = R.pipeP(
   (boardId) => get(`/boards/${boardId}/lists`),
   R.filter((list) => list.name[0] !== '#'),
-  (lists) => (filterByEditor(lists)),
+  filterByEditor,
   R.map(getList),
   (listOfPromises) => Promise.all(listOfPromises),
   R.flatten,
