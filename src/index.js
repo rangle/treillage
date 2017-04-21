@@ -4,23 +4,22 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { syncReduxAndRouter } from 'redux-simple-router';
-import { Router } from 'react-router';
-import history from './redux/history';
+import { Router, hashHistory } from 'react-router';
 import routes from './routes';
 import configureStore from './configureStore';
 
-import { fetchCards } from './redux/trello/actions';
+import { fetchAllCards } from './redux/trello/actions';
 
 const store = configureStore({});
-syncReduxAndRouter(history, store);
+syncReduxAndRouter(hashHistory, store);
 
-store.dispatch(fetchCards());
+store.dispatch(fetchAllCards());
 
 ReactDOM.render(
   <div>
-    <Provider store={ store }>
-      <Router history={ history}>
-        { routes }
+    <Provider store={store}>
+      <Router history={hashHistory}>
+        {routes}
       </Router>
     </Provider>
   </div>,

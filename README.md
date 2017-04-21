@@ -1,11 +1,10 @@
-# react-redux-starter
+# Treillage
 
-> Rangle.io official React + Redux starter
+> A weekly newsletter aggregator.
 
 ## Getting Started
 
-Use our [starter script](https://www.npmjs.com/package/rangle-starter), with
-`react-redux-starter` as the `techStack` argument.
+See it live on http://rangle.github.io/treillage
 
 ## npm scripts
 

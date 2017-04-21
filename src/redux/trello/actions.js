@@ -1,5 +1,5 @@
 import { FETCH_CARDS, SET_CONTENT, BOARD_ID } from '../constants';
-import trello from '../../services/api';
+import { authorize, getAllCards, getMyCards } from '../../services/api';
 
 function makeFetchAction(status, data) {
   return {
@@ -20,7 +20,7 @@ function makeSetContentAction(content) {
   };
 }
 
-export function fetchCards() {
+export function fetchMyCards() {
   return (dispatch) => {
     const authenticationFailure = () =>
       dispatch(makeFetchAction('authError'));
@@ -30,12 +30,35 @@ export function fetchCards() {
 
     const authenticationSuccess = () => {
       dispatch(makeFetchAction('authenticated'));
-      trello.getCards(BOARD_ID)
+      getMyCards(BOARD_ID)
+        .then((content) => dispatch(makeSetContentAction(content)))
+        .catch(apiFailure);
+    };
+    authorize({
+      onSuccess: authenticationSuccess,
+      onError: authenticationFailure,
+    });
+
+    return makeFetchAction('request');
+  };
+}
+
+export function fetchAllCards() {
+  return (dispatch) => {
+    const authenticationFailure = () =>
+      dispatch(makeFetchAction('authError'));
+
+    const apiFailure = (error) =>
+      dispatch(makeFetchAction('apiError', error));
+
+    const authenticationSuccess = () => {
+      dispatch(makeFetchAction('authenticated'));
+      getAllCards(BOARD_ID)
         .then((content) => dispatch(makeSetContentAction(content)))
         .catch(apiFailure);
     };
 
-    trello.authorize({
+    authorize({
       onSuccess: authenticationSuccess,
       onError: authenticationFailure,
     });
