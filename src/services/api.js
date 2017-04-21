@@ -1,5 +1,6 @@
 import R from 'ramda';
 import Q from 'q';
+import moment from 'moment';
 
 import rules from './rules';
 
@@ -136,8 +137,25 @@ const authorize = ({ onSuccess, onFailure }) => {
   });
 };
 
+const updateCard = (id) => {
+  const comment = {
+    text: `Validated on ${ moment().format('MMMM Do YYYY, h:mm:ss a') }`,
+  };
+
+  const success = successMsg => {
+    console.log('Posted comment to card', successMsg);
+  };
+
+  const error = errorMsg => {
+    console.log(`error: ${errorMsg}`);
+  };
+
+  Trello.post(`/cards/${id}/actions/comments/`, comment, success, error);
+};
+
 export {
   getAllCards,
   getMyCards,
   authorize,
+  updateCard,
 };
