@@ -70,7 +70,7 @@ module.exports = {
       },
       {
         test: /\.js$/,
-        loaders: ['react-hot', 'babel-loader?stage=0', 'eslint-loader'],
+        loaders: ['babel-loader', 'eslint-loader'],
         exclude: /node_modules/,
       },
       {
