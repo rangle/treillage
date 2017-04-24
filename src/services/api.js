@@ -1,5 +1,7 @@
 import R from 'ramda';
 import Q from 'q';
+import Promise from 'bluebird';
+// import moment from 'moment';
 
 import rules from './rules';
 
@@ -36,17 +38,45 @@ const validate = (card) => {
   return card;
 };
 
-const getEditor = () => {
+const getAuthUser = () => {
   return Trello.rest('GET', 'members/me')
   .then(
     me => me,
     error => console.error(error));
 };
 
+const getActions = (card) => {
+  // Filter by weekly actions? add &field=date&since=${lastMonday}
+  // const lastMonday = moment().startOf('isoWeek').format('YYYY-MM-DD').toString();
+
+  return get(`/cards/${card.id}/actions?filter=commentCard%2CcreateCard`)
+    .then(actions => actions,
+          error => console.error(error));
+};
+
 const filterByEditor = async (lists) => {
-  const editor = await getEditor();
+  // Assume the auth user is an editor
+  const editor = await getAuthUser();
 
   return lists.filter(list => new RegExp(editor.fullName).test(list.name));
+};
+
+const filterByMention = async (list) => {
+  const user = await getAuthUser();
+
+  return Promise.filter(list, async (card) => {
+    if (!card.isSectionHeading) {
+      try {
+        const actions = await getActions(card);
+        const match = actions.length > 0 && actions.filter(action => action.idMemberCreator === user.id);
+
+        return match.length > 0;
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  })
+  .then(filtered => filtered);
 };
 
 const addFormatting = (card) => R.merge(card, {
@@ -95,6 +125,20 @@ const hasLabel = (targetLabel) => (card) => R.contains(
 const getMyCards = R.pipeP(
   (boardId) => get(`/boards/${boardId}/lists`),
   R.filter((list) => list.name[0] !== '#'),
+  R.map(getList),
+  (listOfPromises) => Promise.all(listOfPromises),
+  R.flatten,
+  R.reject(hasLabel('HOLD')),
+  filterByMention,
+  R.map(validate),
+  R.map(addFormatting),
+  R.map(addAttachmentURLs),
+  Q.all,
+);
+
+const getMySection = R.pipeP(
+  (boardId) => get(`/boards/${boardId}/lists`),
+  R.filter((list) => list.name[0] !== '#'),
   filterByEditor,
   R.map(getList),
   (listOfPromises) => Promise.all(listOfPromises),
@@ -137,7 +181,8 @@ const authorize = ({ onSuccess, onFailure }) => {
 };
 
 export {
-  getAllCards,
   getMyCards,
+  getMySection,
+  getAllCards,
   authorize,
 };

@@ -1,5 +1,5 @@
 import { FETCH_CARDS, SET_CONTENT, BOARD_ID } from '../constants';
-import { authorize, getAllCards, getMyCards } from '../../services/api';
+import { authorize, getMyCards, getMySection, getAllCards } from '../../services/api';
 
 function makeFetchAction(status, data) {
   return {
@@ -31,6 +31,29 @@ export function fetchMyCards() {
     const authenticationSuccess = () => {
       dispatch(makeFetchAction('authenticated'));
       getMyCards(BOARD_ID)
+        .then((content) => dispatch(makeSetContentAction(content)))
+        .catch(apiFailure);
+    };
+    authorize({
+      onSuccess: authenticationSuccess,
+      onError: authenticationFailure,
+    });
+
+    return makeFetchAction('request');
+  };
+}
+
+export function fetchMySection() {
+  return (dispatch) => {
+    const authenticationFailure = () =>
+      dispatch(makeFetchAction('authError'));
+
+    const apiFailure = (error) =>
+      dispatch(makeFetchAction('apiError', error));
+
+    const authenticationSuccess = () => {
+      dispatch(makeFetchAction('authenticated'));
+      getMySection(BOARD_ID)
         .then((content) => dispatch(makeSetContentAction(content)))
         .catch(apiFailure);
     };
