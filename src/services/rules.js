@@ -1,5 +1,4 @@
-export const PASS = 'Looks Good!';
-
+const ok = 'Checks passed.';
 const maxSize = 100;
 
 const errors = {
@@ -9,8 +8,10 @@ const errors = {
 const maxLength = (card) => {
   const size = (card.name + ' ' + card.desc).split(' ').length;
 
-  return size < maxSize ? 'Looks Good!' : errors.maxLength;
+  return size < maxSize ? ok : errors.maxLength;
 };
+
+export const PASS = ok;
 
 export default [
   maxLength,
