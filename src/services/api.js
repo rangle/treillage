@@ -161,7 +161,7 @@ const getAllCards = R.pipeP(
   R.map(getList),
   (listOfPromises) => Promise.all(listOfPromises),
   R.flatten,
-  R.reject(hasLabel('HOLD')),
+  // R.reject(hasLabel('HOLD')),
   R.map(validate),
   R.map(addFormatting),
   R.map(addAttachmentURLs),

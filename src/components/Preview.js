@@ -3,7 +3,6 @@ import marked from 'marked';
 import moment from 'moment';
 import { updateCard } from '../services/api';
 import Button from './ui/Button';
-import { Menu } from 'semantic-ui-react';
 
 import { PASS } from '../services/rules';
 
@@ -102,27 +101,24 @@ const Body = ({ item, render }) => {
 
        {item.messages.length === 0 &&
          <Button
+           positive
            onClick={ () => updateCard(item.id) }>
-           {"Looks good!"}
+           {"Approve"}
          </Button>}
     </div>
   );
 };
 
-const Zine = ({ content, fetchMyCards, fetchMySection, fetchAllCards }) => {
+const Zine = ({ content }) => {
   const styles = {
     content: {
+      marginTop: '8.5rem',
       fontSize: '14px',
     },
   };
 
   return (
     <div style={styles.content}>
-      <Menu pointing secondary>
-        <Menu.Item name="all cards" onClick={fetchAllCards} />
-        <Menu.Item name="my section" onClick={fetchMySection} />
-        <Menu.Item name="my cards" onClick={fetchMyCards} />
-      </Menu>
 
       { content.map((item, i) => item.isSectionHeading ?
         (<Section key={`item-${i}`} render item={ item } />)

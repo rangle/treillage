@@ -1,44 +1,34 @@
 import React from 'react';
+import { Button as SemanticButton } from 'semantic-ui-react';
 
 const Button = (props) => {
   const {
     children,
     className = '',
-    style = {},
     type = 'button',
     onClick,
+    disabled = false,
+    ...rest,
   } = props;
 
   return (
-    <button
+    <SemanticButton
       type={ type }
-      className={ `btn btn-primary  ${ className }` }
-      style={{ ...styles.base, ...style }}
-      onClick={ onClick } >
+      className={ `btn ${ className }` }
+      onClick={ onClick }
+      {...rest}
+    >
       { children }
-    </button>
+    </SemanticButton>
   );
-};
-
-const styles = {
-  base: {},
 };
 
 Button.propTypes = {
   children: React.PropTypes.string.isRequired,
   className: React.PropTypes.string,
-  style: React.PropTypes.object,
   type: React.PropTypes.string,
   onClick: React.PropTypes.func,
   disabled: React.PropTypes.bool,
 };
-
-Button.defaultProps = {
-  className: '',
-  type: 'button',
-  style: {},
-  disabled: true,
-};
-
 
 export default Button;
