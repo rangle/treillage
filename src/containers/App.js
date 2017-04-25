@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Header, Menu } from 'semantic-ui-react';
 
-import { fetchAllCards, fetchMyCards } from '../redux/trello/actions';
+import { fetchAllCards, fetchMySection, fetchMyCards } from '../redux/trello/actions';
 import Navigator from '../components/navigator/Navigator';
 import Content from '../components/ui/Content';
 
@@ -11,6 +11,7 @@ class App extends Component {
   static propTypes = {
     children: PropTypes.node,
     handleAllCards: PropTypes.func,
+    handleSectionCards: PropTypes.func,
     handleMyCards: PropTypes.func,
   }
 
@@ -47,6 +48,7 @@ class App extends Component {
             <Header as="h2" style={styles.header}>Rangle Weekly Preview</Header>
             <Menu inverted pointing secondary>
               <Menu.Item name="all cards" active={this.state.show === 'all'} onClick={() => this.handleShowCards('all')} />
+              <Menu.Item name="my section" active={this.state.show === 'section'} onClick={() => this.handleShowCards('section')} />
               <Menu.Item name="my cards" active={this.state.show === 'me'} onClick={() => this.handleShowCards('me')} />
             </Menu>
           </div>
@@ -59,10 +61,11 @@ class App extends Component {
   }
 
   handleShowCards(filter) {
-    const { handleAllCards, handleMyCards } = this.props;
+    const { handleAllCards, handleSectionCards, handleMyCards } = this.props;
 
     const actions = {
       'all': handleAllCards,
+      'section': handleSectionCards,
       'me': handleMyCards,
     };
 
@@ -79,6 +82,7 @@ function mapStateToProps(state) {
 
 const mapDispatchToProps = {
   handleAllCards: fetchAllCards,
+  handleSectionCards: fetchMySection,
   handleMyCards: fetchMyCards,
 };
 
