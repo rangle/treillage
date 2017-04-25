@@ -12,3 +12,9 @@ test:
   override:
     - yarn run lint
     - yarn run test
+
+deployment:
+  staging:
+    branch: master
+    commands:
+      - ./scripts/deploy-ghpages.sh build
