@@ -49,7 +49,7 @@ const addImageUrl = (item) => item.image ? `
 
 const formatItem = (item) => `${addImageUrl(item)}
 
-__${item.title}__ ${(item.body || '- Empty Body -').replace(/\n/g, ' ')}
+__${item.title}__ ${(item.body || '').replace(/\n/g, ' ')}
 
 `;
 
@@ -69,34 +69,55 @@ const Section = ({ item, render }) => (
 );
 
 const Body = ({ item, render }) => {
-  const bgColor = item.message === PASS ? 'white' : 'pink';
-
-  return (
-    <div style = {{
-      'backgroundColor': bgColor,
+  const styles = {
+    section: {
+      'backgroundColor': item.messages.length === 0 ? 'white' : 'pink',
       'border': '1px solid gray',
       'padding': '1em',
-    }} >
+    },
+    message: {
+      fontSize: '12px',
+      fontStyle: 'italic',
+    },
+    pass: {
+      color: 'green',
+    },
+    error: {
+      color: 'red',
+    },
+  };
+
+  return (
+    <div style={styles.section}>
       <Markdown
-        render={ render }
-        markdown={ formatItem(item) }
+        render={render}
+        markdown={formatItem(item)}
        />
-       {item.message === PASS
-       ? <sub style={{'color': 'green'}} dangerouslySetInnerHTML= {{ __html: PASS }} />
-       : <sub style={{'color': 'red'}} dangerouslySetInnerHTML= {{ __html: item.message }} />}
-      {' '}
-      <Button
-        onClick={ () => updateCard(item.id) }
-        disabled={ item.message !== PASS } >
-        Looks good!
-      </Button>
+       <div style={styles.message}>
+         {item.messages.length === 0
+         ? <div style={styles.pass} dangerouslySetInnerHTML= {{ __html: PASS }} />
+         : item.messages.map((message, i) =>
+           <div key={`error-message-${i}`} style={styles.error} dangerouslySetInnerHTML= {{ __html: message }} />)}
+       </div>
+
+       {item.messages.length === 0 &&
+         <Button
+           onClick={ () => updateCard(item.id) }>
+           {"Looks good!"}
+         </Button>}
     </div>
   );
 };
 
 const Zine = ({ content, fetchAllCards, fetchMyCards }) => {
+  const styles = {
+    content: {
+      fontSize: '14px',
+    },
+  };
+
   return (
-    <div style={{ fontSize: '14pt' }}>
+    <div style={styles.content}>
       <Menu pointing secondary>
         <Menu.Item name="all cards" onClick={fetchAllCards} />
         <Menu.Item name="my cards" onClick={fetchMyCards} />

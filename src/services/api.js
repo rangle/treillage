@@ -30,10 +30,15 @@ const addPeriodIfMissing = (string) => {
 };
 
 const validate = (card) => {
-  rules.forEach(rule => {
-    const message = rule(card);
-    card.message = message;
-  });
+  if (!card.isSectionHeading) {
+    card.messages = [];
+
+    rules.forEach(rule => {
+      const error = rule(card);
+
+      if (error) card.messages.push(error);
+    });
+  }
   return card;
 };
 
