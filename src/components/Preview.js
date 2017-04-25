@@ -109,7 +109,7 @@ const Body = ({ item, render }) => {
   );
 };
 
-const Zine = ({ content, fetchAllCards, fetchMyCards }) => {
+const Zine = ({ content, fetchMyCards, fetchMySection, fetchAllCards }) => {
   const styles = {
     content: {
       fontSize: '14px',
@@ -120,6 +120,7 @@ const Zine = ({ content, fetchAllCards, fetchMyCards }) => {
     <div style={styles.content}>
       <Menu pointing secondary>
         <Menu.Item name="all cards" onClick={fetchAllCards} />
+        <Menu.Item name="my section" onClick={fetchMySection} />
         <Menu.Item name="my cards" onClick={fetchMyCards} />
       </Menu>
 
