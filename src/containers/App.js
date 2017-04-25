@@ -61,11 +61,18 @@ class App extends Component {
   }
 
   handleShowCards(filter) {
+<<<<<<< HEAD
     const { handleAllCards, handleSectionCards, handleMyCards } = this.props;
 
     const actions = {
       'all': handleAllCards,
       'section': handleSectionCards,
+=======
+    const { handleAllCards, handleMyCards } = this.props;
+
+    const actions = {
+      'all': handleAllCards,
+>>>>>>> cf164bad06ee754d07295636dbb432c925474dd8
       'me': handleMyCards,
     };
 
@@ -82,7 +89,10 @@ function mapStateToProps(state) {
 
 const mapDispatchToProps = {
   handleAllCards: fetchAllCards,
+<<<<<<< HEAD
   handleSectionCards: fetchMySection,
+=======
+>>>>>>> cf164bad06ee754d07295636dbb432c925474dd8
   handleMyCards: fetchMyCards,
 };
 
