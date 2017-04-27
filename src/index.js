@@ -8,12 +8,12 @@ import { Router, hashHistory } from 'react-router';
 import routes from './routes';
 import configureStore from './configureStore';
 
-import { fetchAllCards } from './redux/trello/actions';
+import { fetchMyCards } from './redux/trello/actions';
 
 const store = configureStore({});
 syncReduxAndRouter(hashHistory, store);
 
-store.dispatch(fetchAllCards());
+store.dispatch(fetchMyCards());
 
 ReactDOM.render(
   <div>

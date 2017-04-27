@@ -41,7 +41,7 @@ const plugins = basePlugins
 
 module.exports = {
   entry: {
-    app: getEntrySources(['./src/index.js']),
+    app: getEntrySources(['babel-polyfill', './src/index.js']),
   },
 
   output: {
