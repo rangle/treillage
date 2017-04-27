@@ -1,0 +1,10 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.btn-primary:disabled, 
+.btn-primary.is-disabled {
+  cursor: not-allowed;
+}
