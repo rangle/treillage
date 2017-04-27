@@ -3,13 +3,14 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Header, Menu } from 'semantic-ui-react';
 
-import { fetchAllCards, fetchMySection, fetchMyCards } from '../redux/trello/actions';
+import { setMarkdownRender, fetchAllCards, fetchMySection, fetchMyCards } from '../redux/trello/actions';
 import Navigator from '../components/navigator/Navigator';
 import Content from '../components/ui/Content';
 
 class App extends Component {
   static propTypes = {
     children: PropTypes.node,
+    handleMarkdownRender: PropTypes.func,
     handleAllCards: PropTypes.func,
     handleSectionCards: PropTypes.func,
     handleMyCards: PropTypes.func,
@@ -19,7 +20,7 @@ class App extends Component {
     super();
 
     this.state = {
-      show: 'all',
+      show: 'me',
     };
     this.handleShowCards = this.handleShowCards.bind(this);
   }
@@ -47,6 +48,7 @@ class App extends Component {
           <div style={styles.banner}>
             <Header as="h2" style={styles.header}>Rangle Weekly Preview</Header>
             <Menu inverted pointing secondary>
+              <Menu.Item name="publish" active={this.state.show === 'publish'} onClick={() => this.handleShowCards('publish')} />
               <Menu.Item name="all cards" active={this.state.show === 'all'} onClick={() => this.handleShowCards('all')} />
               <Menu.Item name="my section" active={this.state.show === 'section'} onClick={() => this.handleShowCards('section')} />
               <Menu.Item name="my cards" active={this.state.show === 'me'} onClick={() => this.handleShowCards('me')} />
@@ -61,14 +63,16 @@ class App extends Component {
   }
 
   handleShowCards(filter) {
-    const { handleAllCards, handleSectionCards, handleMyCards } = this.props;
+    const { handleMarkdownRender, handleAllCards, handleSectionCards, handleMyCards } = this.props;
 
     const actions = {
+      'publish': handleAllCards,
       'all': handleAllCards,
       'section': handleSectionCards,
       'me': handleMyCards,
     };
 
+    filter === 'publish' ? handleMarkdownRender(false) : handleMarkdownRender(true);
     this.setState({ show: filter });
     actions[filter]();
   }
@@ -81,6 +85,7 @@ function mapStateToProps(state) {
 }
 
 const mapDispatchToProps = {
+  handleMarkdownRender: setMarkdownRender,
   handleAllCards: fetchAllCards,
   handleSectionCards: fetchMySection,
   handleMyCards: fetchMyCards,

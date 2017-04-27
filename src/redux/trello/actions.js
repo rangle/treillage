@@ -1,26 +1,37 @@
-import { FETCH_CARDS, SET_CONTENT, BOARD_ID } from '../constants';
+import { SET_MARKDOWN_RENDER, FETCH_CARDS, SET_CONTENT, BOARD_ID } from '../constants';
 import { authorize, getMyCards, getMySection, getAllCards } from '../../services/api';
 
-function makeFetchAction(status, data) {
+const makeFetchAction = (status, data) => {
   return {
     type: FETCH_CARDS,
     payload: {
       status: status,
       data: data,
+      loading: true,
     },
   };
-}
+};
 
-function makeSetContentAction(content) {
+const makeSetContentAction = (content) => {
   return {
     type: SET_CONTENT,
     payload: {
       content,
+      loading: false,
     },
   };
-}
+};
 
-export function fetchMyCards() {
+export const setMarkdownRender = (bool) => {
+  return {
+    type: SET_MARKDOWN_RENDER,
+    payload: {
+      renderMarkdown: bool,
+    },
+  };
+};
+
+export const fetchMyCards = () => {
   return (dispatch) => {
     const authenticationFailure = () =>
       dispatch(makeFetchAction('authError'));
@@ -41,9 +52,9 @@ export function fetchMyCards() {
 
     return makeFetchAction('request');
   };
-}
+};
 
-export function fetchMySection() {
+export const fetchMySection = () => {
   return (dispatch) => {
     const authenticationFailure = () =>
       dispatch(makeFetchAction('authError'));
@@ -64,9 +75,9 @@ export function fetchMySection() {
 
     return makeFetchAction('request');
   };
-}
+};
 
-export function fetchAllCards() {
+export const fetchAllCards = () => {
   return (dispatch) => {
     const authenticationFailure = () =>
       dispatch(makeFetchAction('authError'));
@@ -88,4 +99,4 @@ export function fetchAllCards() {
 
     return makeFetchAction('request');
   };
-}
+};

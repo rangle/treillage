@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const Input = (props) => {
   const {
@@ -23,10 +24,10 @@ const styles = {
 };
 
 Input.propTypes = {
-  type: React.PropTypes.string,
-  style: React.PropTypes.object,
-  placeholder: React.PropTypes.string,
-  fieldDefinition: React.PropTypes.object.isRequired,
+  type: PropTypes.string,
+  style: PropTypes.object,
+  placeholder: PropTypes.string,
+  fieldDefinition: PropTypes.object.isRequired,
 };
 
 Input.defaultProps = {
