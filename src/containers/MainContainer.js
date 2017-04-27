@@ -1,6 +1,5 @@
 import { connect } from 'react-redux';
 
-import { fetchAllCards, fetchMyCards } from '../redux/trello/actions';
 import MainPage from '../components/MainPage';
 
 function mapStateToProps(state) {
@@ -9,10 +8,7 @@ function mapStateToProps(state) {
   };
 }
 
-const mapDispatchToProps = {
-  fetchAllCards,
-  fetchMyCards,
-};
+const mapDispatchToProps = {};
 
 export default connect(
   mapStateToProps,
