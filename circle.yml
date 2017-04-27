@@ -22,4 +22,5 @@ deployment:
   staging:
     branch: master
     commands:
-      - ./scripts/deploy-ghpages.sh src
+      - yarn run build
+      - ./scripts/deploy-ghpages.sh dist
