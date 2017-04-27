@@ -1,6 +1,7 @@
 import React from 'react';
 import marked from 'marked';
 import moment from 'moment';
+import { Dimmer, Loader } from 'semantic-ui-react';
 import { updateCard } from '../services/api';
 import Button from './ui/Button';
 
@@ -57,7 +58,7 @@ const Markdown = ({ markdown, render }) => render ?
     <div
       dangerouslySetInnerHTML= {{ __html: marked(replaceWikiLinks(markdown)) }} />
   ) : (
-    <pre style={{ 'white-space': 'pre-wrap' }}>{ markdown }</pre>
+    <pre style={{ whiteSpace: 'pre-wrap' }}>{ markdown }</pre>
   );
 
 const Section = ({ item, render }) => (
@@ -92,37 +93,50 @@ const Body = ({ item, render }) => {
         render={render}
         markdown={formatItem(item)}
        />
-       <div style={styles.message}>
-         {item.messages.length === 0
-         ? <div style={styles.pass} dangerouslySetInnerHTML= {{ __html: PASS }} />
-         : item.messages.map((message, i) =>
-           <div key={`error-message-${i}`} style={styles.error} dangerouslySetInnerHTML= {{ __html: message }} />)}
-       </div>
+       {render &&
+         <div>
+           <div style={styles.message}>
+             {item.messages.length === 0
+             ? <div style={styles.pass} dangerouslySetInnerHTML= {{ __html: PASS }} />
+             : item.messages.map((message, i) =>
+               <div key={`error-message-${i}`} style={styles.error} dangerouslySetInnerHTML= {{ __html: message }} />)}
+           </div>
 
-       {item.messages.length === 0 &&
-         <Button
-           positive
-           onClick={ () => updateCard(item.id) }>
-           {"Approve"}
-         </Button>}
+         {item.messages.length === 0 &&
+           <Button
+             positive
+             onClick={ () => updateCard(item.id) }>
+             {"Approve"}
+           </Button>}
+         </div>
+       }
     </div>
   );
 };
 
-const Zine = ({ content }) => {
+const Zine = ({ content, renderMarkdown, loading }) => {
   const styles = {
     content: {
       marginTop: '8.5rem',
       fontSize: '14px',
     },
   };
+  if (loading) {
+    return (
+      <div style={styles.content}>
+        <Dimmer active>
+         <Loader />
+       </Dimmer>
+      </div>
+    );
+  }
 
   return (
     <div style={styles.content}>
 
       { content.map((item, i) => item.isSectionHeading ?
-        (<Section key={`item-${i}`} render item={ item } />)
-        : (<Body key={`item-${i}`} render item={ item } />)
+        (<Section key={`item-${i}`} render={renderMarkdown} item={item} />)
+        : (<Body key={`item-${i}`} render={renderMarkdown} item={item} />)
       )}
       { content.length === 0 && <em>No cards to show.</em> }
 
