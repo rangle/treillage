@@ -30,7 +30,7 @@ const addPeriodIfMissing = (string) => {
     : trimmed;
 };
 
-const validate = (card) => {
+const applyRules = (card) => {
   if (!card.isSectionHeading) {
     card.messages = [];
 
@@ -135,7 +135,7 @@ const getMyCards = R.pipeP(
   R.flatten,
   R.reject(hasLabel('HOLD')),
   filterByMention,
-  R.map(validate),
+  R.map(applyRules),
   R.map(addFormatting),
   R.map(addAttachmentURLs),
   Q.all,
@@ -149,7 +149,7 @@ const getMySection = R.pipeP(
   (listOfPromises) => Promise.all(listOfPromises),
   R.flatten,
   R.reject(hasLabel('HOLD')),
-  R.map(validate),
+  R.map(applyRules),
   R.map(addFormatting),
   R.map(addAttachmentURLs),
   Q.all,
@@ -162,7 +162,7 @@ const getAllCards = R.pipeP(
   (listOfPromises) => Promise.all(listOfPromises),
   R.flatten,
   R.reject(hasLabel('HOLD')),
-  R.map(validate),
+  R.map(applyRules),
   R.map(addFormatting),
   R.map(addAttachmentURLs),
   Q.all,

@@ -4,8 +4,7 @@ import moment from 'moment';
 import { Dimmer, Loader } from 'semantic-ui-react';
 import { updateCard } from '../services/api';
 import Button from './ui/Button';
-
-import { PASS } from '../services/rules';
+import Messages from './Messages';
 
 marked.setOptions({
   renderer: new marked.Renderer(),
@@ -35,7 +34,7 @@ const formatByline = byline => byline
 
 const formatSectionHeader = (item) => `
 
-## ${ item.title }
+# ${ item.title }
 
 _Section edited by ${ formatByline(item.byline) }._
 
@@ -74,6 +73,7 @@ const Body = ({ item, render }) => {
       'backgroundColor': item.messages.length === 0 ? 'white' : 'pink',
       'border': '1px solid gray',
       'padding': '1em',
+      'marginBottom': '16px',
     },
     message: {
       fontSize: '12px',
@@ -87,6 +87,10 @@ const Body = ({ item, render }) => {
     },
   };
 
+  const handleIgnore = (message) => {
+    item.messages.splice(item.messages.indexOf(message));
+  };
+
   return (
     <div style={styles.section}>
       <Markdown
@@ -95,19 +99,10 @@ const Body = ({ item, render }) => {
        />
        {render &&
          <div>
-           <div style={styles.message}>
-             {item.messages.length === 0
-             ? <div style={styles.pass} dangerouslySetInnerHTML= {{ __html: PASS }} />
-             : item.messages.map((message, i) =>
-               <div key={`error-message-${i}`} style={styles.error} dangerouslySetInnerHTML= {{ __html: message }} />)}
-           </div>
-
-         {item.messages.length === 0 &&
-           <Button
-             positive
-             onClick={ () => updateCard(item.id) }>
-             {"Approve"}
-           </Button>}
+           <Messages list={item.messages} handleIgnore={handleIgnore} />
+           {item.messages.length === 0 &&
+             <Button positive onClick={ () => updateCard(item.id) }>{"Approve"}</Button>
+           }
          </div>
        }
     </div>
@@ -118,7 +113,7 @@ const Zine = ({ content, renderMarkdown, loading }) => {
   const styles = {
     content: {
       marginTop: '8.5rem',
-      fontSize: '14px',
+      fontSize: '16px',
     },
   };
   if (loading) {

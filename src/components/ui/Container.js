@@ -11,7 +11,9 @@ const Container = ({ children, style = {}, className = '' }) => {
 };
 
 const styles = {
-  base: {},
+  base: {
+    maxWidth: '700px',
+  },
 };
 
 export default Container;

@@ -48,10 +48,10 @@ class App extends Component {
           <div style={styles.banner}>
             <Header as="h2" style={styles.header}>Rangle Weekly Preview</Header>
             <Menu inverted pointing secondary>
-              <Menu.Item name="publish" active={this.state.show === 'publish'} onClick={() => this.handleShowCards('publish')} />
-              <Menu.Item name="all cards" active={this.state.show === 'all'} onClick={() => this.handleShowCards('all')} />
-              <Menu.Item name="my section" active={this.state.show === 'section'} onClick={() => this.handleShowCards('section')} />
               <Menu.Item name="my cards" active={this.state.show === 'me'} onClick={() => this.handleShowCards('me')} />
+              <Menu.Item name="my section" active={this.state.show === 'section'} onClick={() => this.handleShowCards('section')} />
+              <Menu.Item name="all cards" active={this.state.show === 'all'} onClick={() => this.handleShowCards('all')} />
+              <Menu.Item name="publish" active={this.state.show === 'publish'} onClick={() => this.handleShowCards('publish')} />
             </Menu>
           </div>
         </Navigator>
