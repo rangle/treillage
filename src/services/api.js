@@ -3,7 +3,7 @@ import Q from 'q';
 import Promise from 'bluebird';
 // import moment from 'moment';
 
-import rules from './rules';
+import Rules from './rules';
 
 const get = (path) => new Promise((resolve, reject) => {
   Trello.get(path, resolve, reject);
@@ -33,8 +33,9 @@ const addPeriodIfMissing = (string) => {
 const applyRules = (card) => {
   if (!card.isSectionHeading) {
     card.messages = [];
+    const { list } = new Rules({});
 
-    rules.forEach(rule => {
+    list.forEach(rule => {
       const error = rule(card);
 
       if (error) card.messages.push(error);

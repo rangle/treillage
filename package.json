@@ -12,7 +12,7 @@
     "cover": "./node_modules/.bin/nyc report --reporter=html",
     "dev": "NODE_ENV=development nodemon server.js",
     "lint": "eslint .",
-    "test": "npm run lint && nyc ava 'src/**/*.test.js' && npm run cover",
+    "test": "npm run lint && nyc ava 'src/**/*.test.js' --verbose && npm run cover",
     "test:watch": "mocha --opts ./tests/mocha.opts --watch",
     "start": "NODE_ENV=production node server.js"
   },
