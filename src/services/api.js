@@ -3,7 +3,7 @@ import Q from 'q';
 import Promise from 'bluebird';
 import moment from 'moment';
 
-import rules from './rules';
+import Rules from './rules';
 
 const get = (path) => new Promise((resolve, reject) => {
   Trello.get(path, resolve, reject);
@@ -30,11 +30,12 @@ const addPeriodIfMissing = (string) => {
     : trimmed;
 };
 
-const validate = (card) => {
+const applyRules = (card) => {
   if (!card.isSectionHeading) {
     card.messages = [];
+    const { list } = new Rules({});
 
-    rules.forEach(rule => {
+    list.forEach(rule => {
       const error = rule(card);
 
       if (error) card.messages.push(error);
@@ -135,7 +136,7 @@ const getMyCards = R.pipeP(
   R.flatten,
   R.reject(hasLabel('HOLD')),
   filterByMention,
-  R.map(validate),
+  R.map(applyRules),
   R.map(addFormatting),
   R.map(addAttachmentURLs),
   Q.all,
@@ -149,7 +150,7 @@ const getMySection = R.pipeP(
   (listOfPromises) => Promise.all(listOfPromises),
   R.flatten,
   R.reject(hasLabel('HOLD')),
-  R.map(validate),
+  R.map(applyRules),
   R.map(addFormatting),
   R.map(addAttachmentURLs),
   Q.all,
@@ -162,7 +163,7 @@ const getAllCards = R.pipeP(
   (listOfPromises) => Promise.all(listOfPromises),
   R.flatten,
   R.reject(hasLabel('HOLD')),
-  R.map(validate),
+  R.map(applyRules),
   R.map(addFormatting),
   R.map(addAttachmentURLs),
   Q.all,
