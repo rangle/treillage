@@ -11,19 +11,36 @@ export default function Rules({ maxSize = 100, names = defaultNames.list }) {
   this.errors = {
     noEmptyBody: 'This card\'s description is empty.',
     maxLength: `This card is over ${this.maxSize} characters long, please shorten.`,
+    singleParagraph: `This card has multiple paragraphs.`,
     nameCheck: (message) => `Possible mispellings. \n${message}`,
   };
 
-  this.noEmptyBody = (card) => card.desc.length === 0 && { text: this.errors.noEmptyBody };
+  this.noEmptyBody = (card) => card.desc.length === 0 && {
+    rule: 'noEmptyBody',
+    text: this.errors.noEmptyBody,
+  };
 
   this.maxLength = (card) => {
     const size = (card.name + ' ' + card.desc).split(' ').length;
 
-    return size > this.maxSize && { text: this.errors.maxLength };
+    return size > this.maxSize && {
+      rule: 'maxLength',
+      text: this.errors.maxLength,
+    };
+  };
+
+  this.singleParagraph = (card) => {
+    const spacesOnTitle = card.name.match(/\n/);
+    const spacesOnBody = card.desc.match(/\n/);
+
+    return (spacesOnTitle || spacesOnBody) && {
+      rule: 'singleParagraph',
+      text: this.errors.singleParagraph,
+    };
   };
 
   this.nameCheck = (card) => {
-    const levenTreshold = 5; // The treshold on how distant the word has to be to be suggested as a name
+    const range = 0.35; // How far the name has to be to suggest a correction
 
     if (card.desc.length > 0) {
       const possibleNames = card.desc.match(new RegExp(/([A-Z][\w]*(\s+(van|von|de|da|Van))?(\s+[A-Z][\w]*))/g));
@@ -57,14 +74,22 @@ export default function Rules({ maxSize = 100, names = defaultNames.list }) {
         const message = suggest(
           possibleNames
             .filter(possibleName => this.names.indexOf(possibleName) === -1)
-            .map(possibleName => ({
-              name: possibleName,
-              closeTo: this.names.filter(name => leven(possibleName, name) < levenTreshold),
-            }))
-            .filter(possibleMatch => possibleMatch.closeTo.length > 0)
+            .map(possibleName => {
+              const levenTreshold = Math.round(possibleName.length * range);
+
+              return {
+                name: possibleName,
+                closeTo: this.names.filter(name => leven(possibleName, name) < levenTreshold),
+              };
+            })
+            .filter(possibleMatch => possibleMatch.closeTo && possibleMatch.closeTo.length > 0)
         );
 
-        return message && { text: this.errors.nameCheck(message), options: ['ignorable'] };
+        return message && {
+          rule: 'nameCheck',
+          text: this.errors.nameCheck(message),
+          options: ['ignorable'],
+        };
       }
     }
   };
@@ -72,6 +97,7 @@ export default function Rules({ maxSize = 100, names = defaultNames.list }) {
   this.list = [
     this.noEmptyBody,
     this.maxLength,
+    this.singleParagraph,
     this.nameCheck,
   ];
 }

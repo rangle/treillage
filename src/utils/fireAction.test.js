@@ -16,7 +16,7 @@ const mockReducer = (state = INITIAL_STATE, action) => {
   }
 };
 
-test('fireAction - it should fire the provided action against the provided reducer', t => {
+test('it should fire the provided action against the provided reducer', t => {
   const state = fireAction(mockReducer, INITIAL_STATE, 'test');
   t.truthy(state.test);
 });

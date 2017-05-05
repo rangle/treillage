@@ -3,10 +3,8 @@ import Rules from './rules';
 
 const card = {
   id: '5901b96834bd455486a22657',
-  desc: `Richard McClintock, a Latin professor at Hampden-Sydney
-    College in Virginia, looked up one of the more obscure Latin words, consectetur,
-    from a Lorem Ipsum passage, and going through the cites of the word in classical
-    literature, discovered the undoubtable source.`,
+  name: 'Lorem Ipsum',
+  desc: `Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source.`,
   descData: {
     'emoji': {},
   },
@@ -34,6 +32,17 @@ test('No long card rule',  t => {
   const error = maxLength(longCard);
 
   t.is(error.text, errors.maxLength);
+});
+
+test('Single paragraph rule', t => {
+  const { singleParagraph, errors } = new Rules({});
+  const multiParagraphCard = {
+    ...card,
+    desc: card.desc.replace(',', '\n'),
+  };
+
+  const error = singleParagraph(multiParagraphCard);
+  t.is(error.text, errors.singleParagraph);
 });
 
 test('No mispelled names rule', t => {
