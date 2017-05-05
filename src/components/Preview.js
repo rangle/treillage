@@ -2,6 +2,7 @@ import React from 'react';
 import marked from 'marked';
 import moment from 'moment';
 import { Dimmer, Loader } from 'semantic-ui-react';
+
 import { updateCard } from '../services/api';
 import Button from './ui/Button';
 import Messages from './Messages';
@@ -109,16 +110,21 @@ const Body = ({ item, render }) => {
   );
 };
 
-const Zine = ({ content, renderMarkdown, loading }) => {
+const Zine = ({ content, renderMarkdown, loading, handleClipboard }) => {
   const styles = {
-    content: {
-      marginTop: '8.5rem',
+    page: {
+      marginTop: '6rem',
       fontSize: '16px',
+    },
+    footer: {
+      marginTop: '6rem',
+      fontSize: '14px',
+      fontStyle: 'italic',
     },
   };
   if (loading) {
     return (
-      <div style={styles.content}>
+      <div>
         <Dimmer active>
          <Loader />
        </Dimmer>
@@ -127,17 +133,34 @@ const Zine = ({ content, renderMarkdown, loading }) => {
   }
 
   return (
-    <div style={styles.content}>
-
-      { content.map((item, i) => item.isSectionHeading ?
-        (<Section key={`item-${i}`} render={renderMarkdown} item={item} />)
-        : (<Body key={`item-${i}`} render={renderMarkdown} item={item} />)
-      )}
-      { content.length === 0 && <em>No cards to show.</em> }
-
-      <br/>
-      <hr/>
-      <sub dangerouslySetInnerHTML= {{ __html: marked(`_${moment().day(1).format('MMMM D')}-${moment().day(5).format('D')}._`) }} />
+    <div style={styles.page}>
+      {!renderMarkdown &&
+        <Button
+          positive
+          floated="right"
+          onClick={() => handleClipboard(document.getElementById('content'))}
+        >Copy to Clipboard
+        </Button>
+      }
+      <div id="content">
+        {content.map((item, i) => item.isSectionHeading
+          ? (<Section key={`item-${i}`} render={renderMarkdown} item={item} />)
+          : (<Body key={`item-${i}`} render={renderMarkdown} item={item} />)
+        )}
+      </div>
+      {content.length === 0 && <em>No cards to show.</em>}
+      {!renderMarkdown &&
+        <Button
+          positive
+          floated="right"
+          onClick={() => handleClipboard(document.getElementById('content'))}
+        >Copy to Clipboard
+        </Button>
+      }
+      <div style={styles.footer}>
+        <hr/>
+        <div dangerouslySetInnerHTML= {{ __html: marked(`_${moment().day(1).format('MMMM D')}-${moment().day(5).format('D')}._`) }} />
+      </div>
     </div>
   );
 };
