@@ -1,7 +1,7 @@
 import test from 'ava';
 import isPromise from './isPromise';
 
-test('isPromise - should return true if a Promise is provided', t => {
+test('it should return true if a Promise is provided', t => {
   const promise = new Promise((resolve) => resolve(true));
 
   const payload = {
@@ -11,7 +11,7 @@ test('isPromise - should return true if a Promise is provided', t => {
   t.truthy(isPromise(payload));
 });
 
-test('isPromise - should return false if something that is not a Promise is provided', t => {
+test('it should return false if something that is not a Promise is provided', t => {
   const badPayload1 = { hello: 'world' };
   const badPayload2 = ['hello', 'world'];
   const badPayload3 = 'hello world';

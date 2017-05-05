@@ -19,10 +19,10 @@ const stateWithImmutable = {
   state: fromJS(mockState.state),
 };
 
-test('immutableToJS - should ignore regular JS structures', t => {
+test('it should ignore regular JS structures', t => {
   t.deepEqual(mockState, immutableToJS(mockState));
 });
 
-test('immutableToJS - should convert Immutable structures to JS structures', t => {
+test('it should convert Immutable structures to JS structures', t => {
   t.deepEqual(mockState, immutableToJS(stateWithImmutable));
 });
