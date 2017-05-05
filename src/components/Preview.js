@@ -138,7 +138,7 @@ const Zine = ({ content, renderMarkdown, loading, handleClipboard }) => {
         <Button
           positive
           floated="right"
-          onClick={() => handleClipboard(document.getElementById('content'))}
+          onClick={() => handleClipboard(document.getElementById('content').innerText)}
         >Copy to Clipboard
         </Button>
       }
