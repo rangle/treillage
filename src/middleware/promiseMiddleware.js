@@ -8,14 +8,16 @@ export default function promiseMiddleware({ dispatch }) {
 
     const { types, payload, meta } = action;
     const { promise, data } = payload;
-    const [ PENDING, FULFILLED, REJECTED ] = types;
+    const { REQUEST, SUCCESS, FAILURE } = types;
 
    /**
     * Dispatch the pending action
     */
     dispatch({
-      type: PENDING,
-      ...data && { payload: data },
+      type: REQUEST,
+      ...data && {
+        payload: data,
+      },
       ...meta && { meta },
     });
 
@@ -26,15 +28,15 @@ export default function promiseMiddleware({ dispatch }) {
     return promise.then(
       result => {
         dispatch({
-          type: FULFILLED,
-          payload: result,
+          type: SUCCESS,
+          result,
           meta,
         });
       },
       error => {
         dispatch({
-          type: REJECTED,
-          payload: error,
+          type: FAILURE,
+          error,
           meta,
         });
       }

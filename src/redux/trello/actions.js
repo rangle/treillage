@@ -1,102 +1,68 @@
-import { SET_MARKDOWN_RENDER, FETCH_CARDS, SET_CONTENT, BOARD_ID } from '../constants';
+import { BOARD_ID } from '../../config/trello.json';
+import { SET_MARKDOWN_RENDER, FETCH_CARDS, LOGIN_USER } from '../constants';
 import { authorize, getMyCards, getMySection, getAllCards } from '../../services/api';
 
-const makeFetchAction = (status, data) => {
-  return {
-    type: FETCH_CARDS,
-    payload: {
-      status: status,
-      data: data,
-      loading: true,
-    },
-  };
-};
-
-const makeSetContentAction = (content) => {
-  return {
-    type: SET_CONTENT,
-    payload: {
-      content,
-      loading: false,
-    },
-  };
-};
+const asyncAction = (asyncConstants, promise, data, meta) => ({
+  types: asyncConstants,
+  payload: {
+    promise: promise(data),
+    data,
+    meta,
+  },
+});
 
 export const setMarkdownRender = (bool) => {
   return {
     type: SET_MARKDOWN_RENDER,
-    payload: {
-      renderMarkdown: bool,
-    },
+    renderMarkdown: bool,
   };
 };
 
 export const fetchMyCards = () => {
   return (dispatch) => {
     const authenticationFailure = () =>
-      dispatch(makeFetchAction('authError'));
-
-    const apiFailure = (error) =>
-      dispatch(makeFetchAction('apiError', error));
-
+      dispatch({
+        type: LOGIN_USER.FAILURE,
+      });
     const authenticationSuccess = () => {
-      dispatch(makeFetchAction('authenticated'));
-      getMyCards(BOARD_ID)
-        .then((content) => dispatch(makeSetContentAction(content)))
-        .catch(apiFailure);
+      return dispatch(asyncAction(FETCH_CARDS, getMyCards, BOARD_ID));
     };
     authorize({
       onSuccess: authenticationSuccess,
       onError: authenticationFailure,
     });
-
-    return makeFetchAction('request');
   };
 };
 
 export const fetchMySection = () => {
   return (dispatch) => {
     const authenticationFailure = () =>
-      dispatch(makeFetchAction('authError'));
-
-    const apiFailure = (error) =>
-      dispatch(makeFetchAction('apiError', error));
-
+      dispatch({
+        type: LOGIN_USER.FAILURE,
+      });
     const authenticationSuccess = () => {
-      dispatch(makeFetchAction('authenticated'));
-      getMySection(BOARD_ID)
-        .then((content) => dispatch(makeSetContentAction(content)))
-        .catch(apiFailure);
+      return dispatch(asyncAction(FETCH_CARDS, getMySection, BOARD_ID));
     };
     authorize({
       onSuccess: authenticationSuccess,
       onError: authenticationFailure,
     });
-
-    return makeFetchAction('request');
   };
 };
 
 export const fetchAllCards = () => {
   return (dispatch) => {
     const authenticationFailure = () =>
-      dispatch(makeFetchAction('authError'));
-
-    const apiFailure = (error) =>
-      dispatch(makeFetchAction('apiError', error));
-
+      dispatch({
+        type: LOGIN_USER.FAILURE,
+      });
     const authenticationSuccess = () => {
-      dispatch(makeFetchAction('authenticated'));
-      getAllCards(BOARD_ID)
-        .then((content) => dispatch(makeSetContentAction(content)))
-        .catch(apiFailure);
+      return dispatch(asyncAction(FETCH_CARDS, getAllCards, BOARD_ID));
     };
 
     authorize({
       onSuccess: authenticationSuccess,
       onError: authenticationFailure,
     });
-
-    return makeFetchAction('request');
   };
 };
