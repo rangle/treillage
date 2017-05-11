@@ -7,13 +7,13 @@
   },
   "scripts": {
     "postinstall": "npm run clean; npm run build;",
-    "build": "NODE_ENV=production DEBUG=* webpack",
+    "build": "NODE_ENV=production webpack",
     "clean": "rimraf dist coverage",
     "cover": "./node_modules/.bin/nyc report --reporter=html",
-    "dev": "NODE_ENV=development webpack-dashboard -t 'Dev - Treillage' -- webpack-dev-server",
+    "dev": "NODE_ENV=development webpack-dashboard -t 'Treillage' -- webpack-dev-server",
     "lint": "eslint .",
     "test": "npm run lint && nyc ava 'src/**/*.test.js' --verbose && npm run cover",
-    "test:watch": "mocha --opts ./tests/mocha.opts --watch",
+    "test:watch": "ava 'src/**/*.test.js'--watch",
     "start": "NODE_ENV=production webpack-dev-server --colors --no-info"
   },
   "keywords": [
