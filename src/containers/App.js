@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Header, Menu } from 'semantic-ui-react';
 
-import { setMarkdownRender, fetchAllCards, fetchMySection, fetchMyCards } from '../redux/trello/actions';
-import Navigator from '../components/navigator/Navigator';
-import Content from '../components/ui/Content';
+import { setMarkdownRender, fetchAllCards, fetchMySection, fetchMyCards } from 'redux/trello/actions';
+import Navigator from 'components/navigator/Navigator';
+import Content from 'components/layout/Content';
 
 class App extends Component {
   static propTypes = {

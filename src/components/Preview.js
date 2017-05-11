@@ -3,8 +3,9 @@ import marked from 'marked';
 import moment from 'moment';
 import { Dimmer, Loader } from 'semantic-ui-react';
 
-import { updateCard } from '../services/api';
-import Button from './ui/Button';
+import { updateCard } from 'services/api';
+import Button from './inputs/Button';
+import Modal from './layout/Modal';
 import Messages from './Messages';
 
 marked.setOptions({
@@ -13,20 +14,20 @@ marked.setOptions({
   smartypants: false,
 });
 
-function getWikiLink(code) {
+const getWikiLink = (code) => {
   const linkBaseUrl = 'https://github.com/rangle/hub/wiki/';
   const parts = code.split('|');
   const visibleText = parts[0];
   const link = (parts[1] || parts[0]).replace(/\s/g, '-');
   return `[${visibleText}](${linkBaseUrl}${link})`;
-}
+};
 
-function replaceWikiLinks(body) {
+const replaceWikiLinks = (body) => {
   return body.replace(
     /\[\[(.*?)\]\]/g,
     (_, match) => getWikiLink(match)
   );
-}
+};
 
 const formatByline = byline => byline
   .split(' and ')
@@ -110,7 +111,7 @@ const Body = ({ item, render }) => {
   );
 };
 
-const Zine = ({ content, renderMarkdown, loading, handleClipboard }) => {
+const Zine = ({ content, error, renderMarkdown, loading, handleClipboard }) => {
   const styles = {
     page: {
       marginTop: '6rem',
@@ -134,6 +135,10 @@ const Zine = ({ content, renderMarkdown, loading, handleClipboard }) => {
 
   return (
     <div style={styles.page}>
+      <Modal isVisible={error.statusText === 'error'} type={'error'}>
+        <div>{`Trello Error: ${error.status} - ${error.responseText}`}</div>
+        <div>{"Try reloading this page."}</div>
+      </Modal>
       {!renderMarkdown &&
         <Button
           positive

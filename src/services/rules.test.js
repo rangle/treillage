@@ -11,7 +11,7 @@ const card = {
 };
 
 test('No empty body rule', t => {
-  const { noEmptyBody, errors } = new Rules({});
+  const { noEmptyBody, errors } = new Rules({ names: [] });
   const emptyBodyCard = {
     ...card,
     desc: '',
@@ -23,7 +23,7 @@ test('No empty body rule', t => {
 });
 
 test('No long card rule',  t => {
-  const { maxLength, errors } = new Rules({ maxSize: 70 });
+  const { maxLength, errors } = new Rules({ maxSize: 70, names: []});
   const longCard = {
     ...card,
     desc: card.desc + card.desc,
@@ -35,7 +35,7 @@ test('No long card rule',  t => {
 });
 
 test('Single paragraph rule', t => {
-  const { singleParagraph, errors } = new Rules({});
+  const { singleParagraph, errors } = new Rules({ names: []});
   const multiParagraphCard = {
     ...card,
     desc: card.desc.replace(',', '\n'),

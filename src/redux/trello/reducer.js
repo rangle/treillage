@@ -1,29 +1,37 @@
-import { FETCH_CARDS, SET_MARKDOWN_RENDER, SET_CONTENT } from '../constants';
+import { FETCH_CARDS, SET_MARKDOWN_RENDER, SET_CONTENT } from 'redux/constants';
 import { fromJS } from 'immutable';
 
 const INITIAL_STATE = fromJS({
   content: [],
+  error: {},
   renderMarkdown: true,
   loading: false,
 });
 
-function zineReducer(state = INITIAL_STATE, action = {}) {
-  switch (action.type) {
-
-  case FETCH_CARDS:
-    return state.set('loading', fromJS(action.payload.loading));
-
-  case SET_MARKDOWN_RENDER:
-    return state.set('renderMarkdown', fromJS(action.payload.renderMarkdown));
-
-  case SET_CONTENT:
+const ACTION_HANDLERS = {
+  [FETCH_CARDS.REQUEST]: (state) => {
+    return state.set('loading', true);
+  },
+  [FETCH_CARDS.SUCCESS]: (state, action) => {
     return state
-            .set('content', fromJS(action.payload.content))
-            .set('loading', fromJS(action.payload.loading));
+      .set('content', fromJS(action.result))
+      .set('error', fromJS({}))
+      .set('loading', false);
+  },
+  [FETCH_CARDS.FAILURE]: (state, action) => {
+    return state
+      .set('error', fromJS(action.error))
+      .set('loading', false);
+  },
+  [SET_MARKDOWN_RENDER]: (state, action) => {
+    return state.set('renderMarkdown', fromJS(action.renderMarkdown));
+  },
+  [SET_CONTENT]: (state, action) => {
+    return state.set('content', fromJS(action.payload.content));
+  },
+};
 
-  default:
-    return state;
-  }
+export default function zineReducer(state = INITIAL_STATE, action) {
+  const handler = ACTION_HANDLERS[action.type];
+  return handler ? handler(state, action) : state;
 }
-
-export default zineReducer;

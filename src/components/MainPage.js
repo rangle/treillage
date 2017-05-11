@@ -2,24 +2,26 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import clipboard from 'clipboard-js';
 
-import Container from './ui/Container';
+import Container from './layout/Container';
 import Preview from './Preview';
 
 export default class MainPage extends Component {
   static propTypes = {
     content: PropTypes.array.isRequired,
+    error: PropTypes.object,
     renderMarkdown: PropTypes.bool.isRequired,
     loading: PropTypes.bool.isRequired,
     route: PropTypes.object.isRequired,
   }
 
   render() {
-    const { content, renderMarkdown, loading } = this.props;
+    const { content, error, renderMarkdown, loading } = this.props;
 
     return (
       <Container>
         <Preview
           content={content}
+          error={error}
           renderMarkdown={renderMarkdown}
           loading={loading}
           handleClipboard={this.handleClipboard}
