@@ -51,6 +51,10 @@ const plugins = basePlugins
 
 module.exports = {
   target: 'web',
+  resolve: {
+    modules: [srcPath, 'node_modules'],
+    extensions: ['.js', '.jsx', '.json'],
+  },
   entry: {
     app: sources,
     vendor: [

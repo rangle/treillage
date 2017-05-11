@@ -1,9 +1,8 @@
 import React from 'react';
 import { Grid } from 'semantic-ui-react';
 
-import Button from './ui/Button';
-import { PASS } from '../services/rules';
-
+import { PASS } from 'services/rules';
+import Button from './inputs/Button';
 
 const Messages = ({ list, handleIgnore }) => {
   const styles = {

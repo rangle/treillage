@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Input = (props) => {
+const Text = (props) => {
   const {
     type,
     style,
@@ -23,18 +23,18 @@ const styles = {
   base: {},
 };
 
-Input.propTypes = {
+Text.propTypes = {
   type: PropTypes.string,
   style: PropTypes.object,
   placeholder: PropTypes.string,
   fieldDefinition: PropTypes.object.isRequired,
 };
 
-Input.defaultProps = {
+Text.defaultProps = {
   type: 'text',
   style: {},
   placeholder: '',
 };
 
 
-export default Input;
+export default Text;

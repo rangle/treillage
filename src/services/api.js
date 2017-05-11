@@ -3,7 +3,7 @@ import Q from 'q';
 import Promise from 'bluebird';
 import moment from 'moment';
 
-import Rules from './rules';
+import Rules from 'services/rules';
 
 const get = (path) => new Promise((resolve, reject) => {
   Trello.get(path, resolve, reject);

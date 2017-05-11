@@ -1,6 +1,6 @@
-import { BOARD_ID } from '../../config/trello.json';
-import { SET_MARKDOWN_RENDER, FETCH_CARDS, LOGIN_USER } from '../constants';
-import { authorize, getMyCards, getMySection, getAllCards } from '../../services/api';
+import { BOARD_ID } from 'config/trello.json';
+import { SET_MARKDOWN_RENDER, FETCH_CARDS, LOGIN_USER } from 'redux/constants';
+import { authorize, getMyCards, getMySection, getAllCards } from 'services/api';
 
 const asyncAction = (asyncConstants, promise, data, meta) => ({
   types: asyncConstants,
@@ -10,6 +10,15 @@ const asyncAction = (asyncConstants, promise, data, meta) => ({
     meta,
   },
 });
+
+export const setContent = (content) => {
+  return {
+    type: SET_CONTENT,
+    payload: {
+      content,
+    },
+  };
+};
 
 export const setMarkdownRender = (bool) => {
   return {

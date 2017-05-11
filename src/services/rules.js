@@ -1,6 +1,6 @@
 // import R from 'ramda';
 import leven from 'leven';
-import defaultNames from '../dictionary/names.json';
+import defaultNames from 'dictionary/names.json';
 
 export const PASS = 'Checks passed.';
 

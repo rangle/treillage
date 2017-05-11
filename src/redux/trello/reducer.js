@@ -1,8 +1,9 @@
-import { FETCH_CARDS, SET_MARKDOWN_RENDER, SET_CONTENT } from '../constants';
+import { FETCH_CARDS, SET_MARKDOWN_RENDER, SET_CONTENT } from 'redux/constants';
 import { fromJS } from 'immutable';
 
 const INITIAL_STATE = fromJS({
   content: [],
+  error: {},
   renderMarkdown: true,
   loading: false,
 });
@@ -14,6 +15,7 @@ const ACTION_HANDLERS = {
   [FETCH_CARDS.SUCCESS]: (state, action) => {
     return state
       .set('content', fromJS(action.result))
+      .set('error', fromJS({}))
       .set('loading', false);
   },
   [FETCH_CARDS.FAILURE]: (state, action) => {
