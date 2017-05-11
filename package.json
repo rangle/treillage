@@ -12,7 +12,7 @@
     "cover": "./node_modules/.bin/nyc report --reporter=html",
     "dev": "NODE_ENV=development webpack-dashboard -t 'Treillage' -- webpack-dev-server",
     "lint": "eslint .",
-    "test": "npm run lint && babel-node ./node_modules/.bin/nyc ./node_modules/.bin/ava 'src/**/*.test.js' --verbose && npm run cover",
+    "test": "npm run lint && ./node_modules/.bin/nyc ./node_modules/.bin/ava 'src/**/*.test.js' --verbose && npm run cover",
     "test:watch": "ava 'src/**/*.test.js'--watch",
     "start": "NODE_ENV=production webpack-dev-server --colors --no-info"
   },
