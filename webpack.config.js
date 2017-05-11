@@ -12,8 +12,9 @@ const isProduction = process.env.NODE_ENV === 'production';
 
 const distPath = path.join(__dirname, './dist');
 const srcPath = path.join(__dirname, './src');
+const jsEntry = path.join(srcPath, 'index.js');
 
-const sources = [path.join(srcPath, 'index.js')];
+const sources = [jsEntry];
 
 if (!isProduction) {
   sources.unshift(`webpack-dev-server/client?http://${config.host}:${config.port}/`);
@@ -34,12 +35,12 @@ const basePlugins = [
     name: 'vendor',
     filename: 'vendor.js',
   }),
-  new DashboardPlugin(),
 ];
 
 const devPlugins = [
   new webpack.HotModuleReplacementPlugin(),
   new webpack.NoEmitOnErrorsPlugin(),
+  new DashboardPlugin(),
 ];
 
 const prodPlugins = [
@@ -91,7 +92,7 @@ module.exports = {
 
   devtool: isProduction ? false : 'source-map',
 
-  context: srcPath,
+  context: jsEntry,
 
   plugins: plugins,
 
