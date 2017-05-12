@@ -4,7 +4,7 @@ import Rules from './rules';
 const card = {
   id: '5901b96834bd455486a22657',
   name: 'Lorem Ipsum',
-  desc: `Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source.`,
+  desc: 'Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source.',
   descData: {
     'emoji': {},
   },
@@ -38,9 +38,9 @@ test('Single paragraph rule', t => {
   const { singleParagraph, errors } = new Rules({ names: []});
   const multiParagraphCard = {
     ...card,
-    desc: card.desc.replace(',', '\n'),
+    desc: card.desc.replace(',', '\n\n'),
   };
-
+  console.log(multiParagraphCard.desc);
   const error = singleParagraph(multiParagraphCard);
   t.is(error.text, errors.singleParagraph);
 });
