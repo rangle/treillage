@@ -32,7 +32,6 @@ export default function Rules({ maxSize = 100, names = defaultNames.list }) {
   this.singleParagraph = (card) => {
     const spacesOnTitle = card.name.match(/\n\n\w/);
     const spacesOnBody = card.desc.match(/\n\n\w/);
-
     return (spacesOnTitle || spacesOnBody) && {
       rule: 'singleParagraph',
       text: this.errors.singleParagraph,
