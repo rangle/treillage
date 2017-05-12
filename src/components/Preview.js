@@ -38,7 +38,7 @@ const formatSectionHeader = (item) => `
 
 # ${ item.title }
 
-_Section edited by ${ formatByline(item.byline) }._
+_Section edited by ${item.byline && formatByline(item.byline)}._
 
 `;
 
