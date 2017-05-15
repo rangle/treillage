@@ -24,7 +24,7 @@ const getWikiLink = (code) => {
 
 const replaceWikiLinks = (body) => {
   return body.replace(
-    /\[\[(.*?)\]\]/g,
+    /\[\[(.+?)\]\]/g,
     (_, match) => getWikiLink(match)
   );
 };
