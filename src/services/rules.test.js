@@ -100,7 +100,26 @@ test('Link check rule: composite match on dictionary [[nickname|Full Name]]', t 
   t.is(error.text, errors.linkCheck(notFoundComposite));
 });
 
-test('No mispelled names rule', t => {
+test('Name check rule: link exact matches', t => {
+  const linkedName = '[[Richard McClintock]]';
+  const correctName = 'Richard McClintock';
+  const otherNames = ['Ricardo Maquinto', 'Richard Lionheart'];
+  const dictionary = {
+    fullnames: [correctName, ...otherNames],
+  };
+  const { nameCheck, errors } = new Rules({ dictionary });
+  const unlinkedCard = {
+    ...card,
+    desc: card.desc.replace(linkedName, correctName),
+  };
+
+  const error = nameCheck(unlinkedCard);
+
+  const linkSuggestions = `${correctName} - You may want to add a wiki link: ${linkedName}`;
+  t.is(error.text, errors.nameCheck({ linkSuggestions }));
+});
+
+test('Name check rule: no mispelled names', t => {
   const mispelledName = 'Rickard McClinton';
   const correctName = 'Richard McClintock';
   const otherNames = ['Ricardo Maquinto', 'Richard Lionheart'];
@@ -110,13 +129,13 @@ test('No mispelled names rule', t => {
   const { nameCheck, errors } = new Rules({ dictionary });
   const mispelledCard = {
     ...card,
-    desc: card.desc.replace(correctName, mispelledName),
+    desc: card.desc.replace(`[[${correctName}]]`, mispelledName),
   };
 
   const error =  nameCheck(mispelledCard);
 
-  const message = `${mispelledName} - Perhaps you meant: ${correctName}`;
-  t.is(error.text, errors.nameCheck(message));
+  const nameSuggestions = `${mispelledName} - Perhaps you meant: ${correctName}`;
+  t.is(error.text, errors.nameCheck({ nameSuggestions }));
 });
 
 test('Valid card should pass all rules', t => {

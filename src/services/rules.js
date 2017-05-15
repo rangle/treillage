@@ -17,8 +17,14 @@ export default function Rules({ maxSize = 100, dictionary = defaultDictionary })
     noEmptyBody: 'This card\'s description is empty.',
     maxLength: `This card is over ${this.maxSize} characters long, please shorten.`,
     singleParagraph: `This card has multiple paragraphs.`,
-    linkCheck: (name) => `${name} not found in dictionary. Possible broken link. \n`,
-    nameCheck: (message) => `Possible mispellings. \n${message}`,
+    linkCheck: (name) => `'${name}' not found in name dictionary. Possible broken link. \n`,
+    nameCheck: ({ nameSuggestions, linkSuggestions }) => {
+      let message = '';
+
+      if (nameSuggestions) message += `Possible mispellings. \n${nameSuggestions}`;
+      if (linkSuggestions) message += linkSuggestions;
+      return message;
+    },
   };
 
   this.noEmptyBody = (card) => card.desc.length === 0 && {
@@ -79,34 +85,32 @@ export default function Rules({ maxSize = 100, dictionary = defaultDictionary })
     const range = 0.35; // How far the name has to be to suggest a correction
 
     if (card.desc.length > 0) {
-      const possibleNames = card.desc.match(new RegExp(/([A-Z]\w+(\s+(van|von|de|da|Da|Van))?(\s+[A-Z]\w+(-\w+)?))/g)) || [];
+      const possibleNames = card.desc.match(new RegExp(/([A-Z]\w+(?:\s+(?:van|von|de|da|Da|Van))?\s+[A-Z]\w+(?:-\w+)?)(?!.*?(\]\]))/g)) || [];
 
-      // Comments as reference:
+      const suggestLink = (suggestions) => {
+        return suggestions.reduce((suggestion, { name, nameLink }) => {
+          return `${suggestion && suggestion + '\n'}${name} - You may want to add a wiki link: ${nameLink}`;
+        }, '');
+      };
 
-      // Ideally, processing Slack/Resource Guru happens at the start of the app.
-      // The below people output has been cached as names.fullnames
+      const linkSuggestions = suggestLink(
+        possibleNames
+          .map(name => {
+            return fullnames.indexOf(name) !== -1 && {
+              name,
+              nameLink: `[[${name}]]`,
+            };
+          })
+          .filter(notFoundNames => notFoundNames)
+        );
 
-      // const filterByRg = p => names.rg.indexOf(p.realName) !== -1;
-      // const filterByName = p => p.realName;
-      // const filterByEmail = p => p.email && p.email.split('@')[1] === 'rangle.io';
-      // const removeEmails =  p => ({ name: p.realName, username: p.name });
-      // const removeUsernames = p => new RegExp(p.name.replace(' ', '|'), 'i').test(p.username) ? p.name : ([p.name, p.username]);
-      //
-      // const people = R.flatten(names.slack
-      //   // .filter(filterByRg)
-      //   .filter(filterByName)
-      //   .filter(filterByEmail)
-      //   .map(removeEmails)
-      //   .map(removeUsernames)
-      // );
-
-      const suggest = (suggestions) => {
+      const suggestName = (suggestions) => {
         return suggestions.reduce((suggestion, { name, closeTo }) => {
           return `${suggestion && suggestion + '\n'}${name} - Perhaps you meant: ${closeTo.join(', ')}`;
         }, '');
       };
 
-      const message = suggest(
+      const nameSuggestions = suggestName(
         possibleNames
           .filter(possibleName => fullnames.indexOf(possibleName) === -1)
           .map(possibleName => {
@@ -120,9 +124,9 @@ export default function Rules({ maxSize = 100, dictionary = defaultDictionary })
           .filter(possibleMatch => possibleMatch.closeTo && possibleMatch.closeTo.length > 0)
       );
 
-      return message && {
+      return (nameSuggestions || linkSuggestions) && {
         rule: 'nameCheck',
-        text: this.errors.nameCheck(message),
+        text: this.errors.nameCheck({ nameSuggestions, linkSuggestions }),
         options: ['ignorable'],
       };
     }
