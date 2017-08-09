@@ -26,13 +26,14 @@ _Section edited by ${item.byline && formatByline(item.byline)}._
 
 `;
 
-const formatGhPageHeaderLink = (title) => title.toLowerCase().replace(' ', '-');
+const formatGhPageHeaderLink = (title) =>
+  title.toLowerCase().replace(/[\[\]_+.,!@#$%^&*();\/|<>"']/g, '').replace(/(\t)|( )/g, '-');
 
 export const formatHighlights = (item) => `
   # ${item.title}
 
-  ${item.cardTitles.reduce((string, title, i) =>
-    string.concat(`## ${i + 1}. [${title}](#${formatGhPageHeaderLink(title)}) \n`), '')}
+  ${item.cardTitles.reduce((string, title) =>
+    string.concat(`## - [${title}](#${formatGhPageHeaderLink(title)}) \n`), '')}
 `;
 
 const addImageUrl = (item) => item.image ? `
@@ -43,8 +44,7 @@ const addImageUrl = (item) => item.image ? `
 
 export const formatItem = (item) => `${addImageUrl(item)}
 
-  ## ${item.title}
-
+  ### ${item.title}
   ${(item.body || '').replace(/\n/g, ' ')}
 
 `;

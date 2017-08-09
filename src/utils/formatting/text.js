@@ -42,7 +42,7 @@ export const makeHighlights = (lists) => {
   if (highlightCards.length > 0) {
     lists.unshift({
       section: 'highlight',
-      title: 'Highlights',
+      title: 'Headlines',
       cardTitles: highlightCards.map(card => card.name),
     });
   }
