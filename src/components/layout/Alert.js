@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const componentColor = {
   info: 'bg-blue white',
@@ -7,7 +8,7 @@ const componentColor = {
   error: 'bg-red white',
 };
 
-const Alert = ({ children, isVisible, status = 'info', className = '', style = {}}) => {
+export const Alert = ({ children, isVisible, status = 'info', className = '', style = {}}) => {
   const visibleClass = isVisible ? 'block' : 'hide';
 
   return (
@@ -23,4 +24,10 @@ const styles = {
   base: {},
 };
 
-export default Alert;
+Alert.propTypes = {
+  children: PropTypes.element,
+  isVisible: PropTypes.boolean,
+  status: PropTypes.OneOf(['info', 'warning', 'success', 'error']),
+  className: PropTypes.string,
+  style: PropTypes.Object,
+};

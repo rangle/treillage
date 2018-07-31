@@ -1,4 +1,4 @@
-import 'styles/styles.css';
+import './styles/styles.css';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -8,7 +8,7 @@ import { Router, hashHistory } from 'react-router';
 import routes from './routes';
 import configureStore from './configureStore';
 
-import { fetchMyCards } from 'redux/trello/actions';
+import { fetchMyCards } from './redux/trello/actions';
 
 const store = configureStore({});
 syncReduxAndRouter(hashHistory, store);

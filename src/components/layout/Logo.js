@@ -1,8 +1,9 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import LogoImage from '../../assets/rangleio-logo.svg';
 
-const Logo = ({ style = {} }) => {
+export const Logo = ({ style = {} }) => {
   return (
     <img
       style={{ ...styles.base, ...style }}
@@ -17,4 +18,6 @@ const styles = {
   },
 };
 
-export default Logo;
+Logo.propTypes = {
+  style: PropTypes.object,
+};

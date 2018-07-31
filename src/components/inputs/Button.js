@@ -2,14 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button as SemanticButton } from 'semantic-ui-react';
 
-const Button = (props) => {
+export const Button = (props) => {
   const {
     children,
     className = '',
     type = 'button',
     onClick,
     disabled = false,
-    ...rest,
+    ...rest
   } = props;
 
   return (
@@ -17,6 +17,7 @@ const Button = (props) => {
       type={ type }
       className={ `btn ${ className }` }
       onClick={ onClick }
+      disabled={disabled}
       {...rest}
     >
       { children }
@@ -25,11 +26,9 @@ const Button = (props) => {
 };
 
 Button.propTypes = {
-  children: PropTypes.string,
+  children: PropTypes.element,
   className: PropTypes.string,
   type: PropTypes.string,
   onClick: PropTypes.func,
   disabled: PropTypes.bool,
 };
-
-export default Button;

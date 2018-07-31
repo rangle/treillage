@@ -28,9 +28,9 @@ if (__DEV__) {
 
 function configureStore(initialState) {
   const store = composeEnhancers(
-  __DEV__
-  ? applyMiddleware(promiseMiddleware, thunk, logger)
-  : applyMiddleware(promiseMiddleware, thunk),
+    __DEV__
+      ? applyMiddleware(promiseMiddleware, thunk, logger)
+      : applyMiddleware(promiseMiddleware, thunk),
     persistState('session', storageConfig)
   )(createStore)(rootReducer, initialState);
 

@@ -1,12 +1,13 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import marked from 'marked';
 import moment from 'moment';
 import { Dimmer, Loader } from 'semantic-ui-react';
 
-import { updateCard } from 'services/api';
-import Button from './inputs/Button';
-import Modal from './layout/Modal';
-import Messages from './Messages';
+import { Body } from './layout/Body';
+import { Section } from './layout/Section';
+import { Modal } from './layout/Modal';
+import { Button } from './inputs/Button';
 
 marked.setOptions({
   renderer: new marked.Renderer(),
@@ -14,104 +15,7 @@ marked.setOptions({
   smartypants: false,
 });
 
-const getWikiLink = (code) => {
-  const linkBaseUrl = 'https://github.com/rangle/hub/wiki/';
-  const parts = code.split('|');
-  const visibleText = parts[0];
-  const link = (parts[1] || parts[0]).replace(/\s/g, '-');
-  return `[${visibleText}](${linkBaseUrl}${link})`;
-};
-
-const replaceWikiLinks = (body) => {
-  return body.replace(
-    /\[\[(.*?)\]\]/g,
-    (_, match) => getWikiLink(match)
-  );
-};
-
-const formatByline = byline => byline
-  .split(' and ')
-  .map((person) => '[[' + person.trim() + ']]')
-  .join(' and ');
-
-const formatSectionHeader = (item) => `
-
-# ${ item.title }
-
-_Section edited by ${item.byline && formatByline(item.byline)}._
-
-`;
-
-const addImageUrl = (item) => item.image ? `
-
-![Item cover image](${item.image})
-
-` : '';
-
-const formatItem = (item) => `${addImageUrl(item)}
-
-__${item.title}__ ${(item.body || '').replace(/\n/g, ' ')}
-
-`;
-
-const Markdown = ({ markdown, render }) => render ?
-  (
-    <div
-      dangerouslySetInnerHTML= {{ __html: marked(replaceWikiLinks(markdown)) }} />
-  ) : (
-    <pre style={{ whiteSpace: 'pre-wrap' }}>{ markdown }</pre>
-  );
-
-const Section = ({ item, render }) => (
-  <Markdown
-    render={ render }
-    markdown={ formatSectionHeader(item) }
-   />
-);
-
-const Body = ({ item, render }) => {
-  const styles = {
-    section: {
-      'backgroundColor': item.messages.length === 0 ? 'white' : 'pink',
-      'border': '1px solid gray',
-      'padding': '1em',
-      'marginBottom': '16px',
-    },
-    message: {
-      fontSize: '12px',
-      fontStyle: 'italic',
-    },
-    pass: {
-      color: 'green',
-    },
-    error: {
-      color: 'red',
-    },
-  };
-
-  const handleIgnore = (message) => {
-    item.messages.splice(item.messages.indexOf(message));
-  };
-
-  return (
-    <div style={styles.section}>
-      <Markdown
-        render={render}
-        markdown={formatItem(item)}
-       />
-       {render &&
-         <div>
-           <Messages list={item.messages} handleIgnore={handleIgnore} />
-           {item.messages.length === 0 &&
-             <Button positive onClick={ () => updateCard(item.id) }>{"Approve"}</Button>
-           }
-         </div>
-       }
-    </div>
-  );
-};
-
-const Zine = ({ content, error, renderMarkdown, loading, handleClipboard }) => {
+export const Preview = ({ content, error, renderMarkdown, isLoading, handleClipboard }) => {
   const styles = {
     page: {
       marginTop: '6rem',
@@ -123,12 +27,12 @@ const Zine = ({ content, error, renderMarkdown, loading, handleClipboard }) => {
       fontStyle: 'italic',
     },
   };
-  if (loading) {
+  if (isLoading) {
     return (
       <div>
         <Dimmer active>
-         <Loader />
-       </Dimmer>
+          <Loader />
+        </Dimmer>
       </div>
     );
   }
@@ -137,7 +41,7 @@ const Zine = ({ content, error, renderMarkdown, loading, handleClipboard }) => {
     <div style={styles.page}>
       <Modal isVisible={error.statusText === 'error'} type={'error'}>
         <div>{`Trello Error: ${error.status} - ${error.responseText}`}</div>
-        <div>{"Try reloading this page."}</div>
+        <div>{'Try reloading this page.'}</div>
       </Modal>
       {!renderMarkdown &&
         <Button
@@ -170,4 +74,10 @@ const Zine = ({ content, error, renderMarkdown, loading, handleClipboard }) => {
   );
 };
 
-export default Zine;
+Preview.propTypes = {
+  content: PropTypes.array,
+  error: PropTypes.object,
+  renderMarkdown: PropTypes.boolean,
+  isLoading: PropTypes.boolean,
+  handleClipboard: PropTypes.func,
+};

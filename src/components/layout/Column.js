@@ -1,6 +1,7 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
-const Column = ({ children, className = '', style = {} }) => {
+export const Column = ({ children, className = '', style = {} }) => {
   return (
     <div className={ `col ${ className }` } style={{ ...styles.base, ...style }}>
       { children }
@@ -12,4 +13,8 @@ const styles = {
   base: {},
 };
 
-export default Column;
+Column.propTypes = {
+  children: PropTypes.element,
+  className: Proptypes.string,
+  style: PropTypes.object,
+};

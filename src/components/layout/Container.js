@@ -1,6 +1,7 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
-const Container = ({ children, style = {}, className = '' }) => {
+export const Container = ({ children, style = {}, className = '' }) => {
   return (
     <div className={ `container ${ className }` } style={{ ...styles.base, ...style }}>
       <div className="clearfix">
@@ -16,4 +17,8 @@ const styles = {
   },
 };
 
-export default Container;
+Container.propTypes = {
+  children: PropTypes.element,
+  style: PropTypes.object,
+  className: PropTypes.string,
+};

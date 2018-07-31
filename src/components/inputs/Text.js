@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Text = (props) => {
+export const Text = (props) => {
   const {
     type,
     style,
@@ -35,6 +35,3 @@ Text.defaultProps = {
   style: {},
   placeholder: '',
 };
-
-
-export default Text;
