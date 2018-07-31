@@ -71,7 +71,6 @@ module.exports = {
       'redux',
       'react-redux',
       'redux-logger',
-      'redux-form',
       'redux-localstorage',
       'redux-thunk',
       'react-router',
