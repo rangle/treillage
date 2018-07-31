@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "A weekly newsletter aggregator.",
   "engines": {
-    "node": "6.x"
+    "node": "8.x"
   },
   "scripts": {
     "postinstall": "npm run clean; npm run build;",
