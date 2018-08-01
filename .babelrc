@@ -1,10 +1,10 @@
 {
   "plugins": [
-   "transform-runtime",
+   "@babel/transform-runtime",
+   "@babel/plugin-proposal-class-properties"
  ],
  "presets": [
-   "react",
-   "es2015",
-   "stage-0"
+   "@babel/preset-react",
+   "@babel/preset-env"
  ]
 }

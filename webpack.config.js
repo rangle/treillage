@@ -48,7 +48,7 @@ module.exports = {
   entry: {
     app: sources,
     vendor: [
-      'babel-polyfill',
+      '@babel/polyfill',
       'bluebird',
       'clipboard-js',
       'leven',

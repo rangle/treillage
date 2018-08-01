@@ -14,6 +14,7 @@ export const Container = ({ children, style = {}, className = '' }) => {
 const styles = {
   base: {
     maxWidth: '700px',
+    margin: '0 auto',
   },
 };
 
