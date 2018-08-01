@@ -1,3 +1,4 @@
+import 'basscss/css/basscss.min.css';
 import './styles/styles.css';
 
 import React from 'react';

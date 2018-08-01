@@ -92,6 +92,8 @@ export default function Rules({ maxSize = 100, names = defaultNames.list }) {
         };
       }
     }
+
+    return null;
   };
 
   this.list = [

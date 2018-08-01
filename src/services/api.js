@@ -1,5 +1,4 @@
 import R from 'ramda';
-import Q from 'q';
 import Promise from 'bluebird';
 import moment from 'moment';
 
@@ -81,6 +80,7 @@ const filterByMention = async(list) => {
         console.error(error);
       }
     }
+    return null;
   })
     .then(filtered => filtered);
 };
@@ -91,13 +91,12 @@ const addFormatting = (card) => R.merge(card, {
 });
 
 const addAttachmentURLs = (card) => {
-  if (card.idAttachmentCover) {
-    return get(`/cards/${card.id}/attachments/${card.idAttachmentCover}`)
-      .then(attachment => R.merge(card, {
-        image: attachment.url,
-      }));
-  }
-  return Q.when(card);
+  if (!card.idAttachmentCover) return card;
+
+  return get(`/cards/${card.id}/attachments/${card.idAttachmentCover}`)
+    .then(attachment => R.merge(card, {
+      image: attachment.url,
+    }));
 };
 
 // const formatCard = (card) => card.isSectionHeading ?
@@ -139,7 +138,7 @@ const getMyCards = R.pipeP(
   R.map(applyRules),
   R.map(addFormatting),
   R.map(addAttachmentURLs),
-  Q.all,
+  Promise.all,
 );
 
 const getMySection = R.pipeP(
@@ -153,7 +152,7 @@ const getMySection = R.pipeP(
   R.map(applyRules),
   R.map(addFormatting),
   R.map(addAttachmentURLs),
-  Q.all,
+  Promise.all,
 );
 
 const getAllCards = R.pipeP(
@@ -166,7 +165,7 @@ const getAllCards = R.pipeP(
   R.map(applyRules),
   R.map(addFormatting),
   R.map(addAttachmentURLs),
-  Q.all,
+  Promise.all,
   // (renderedCards) => renderedCards.join('\n\n'),
 );
 

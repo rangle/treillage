@@ -1,5 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
+const postcssPresetEnvPlugin = require('postcss-preset-env');
 const HtmlWebpackPlugin  = require('html-webpack-plugin');
 const DashboardPlugin = require('webpack-dashboard/plugin');
 
@@ -16,10 +17,6 @@ const jsEntry = path.join(srcPath, 'index.js');
 
 const sources = [jsEntry];
 
-if (!isProduction) {
-  sources.unshift(`webpack-dev-server/client?http://${config.host}:${config.port}/`);
-}
-
 const basePlugins = [
   new webpack.DefinePlugin({
     __DEV__: process.env.NODE_ENV !== 'production',
@@ -31,10 +28,6 @@ const basePlugins = [
     filename: 'index.html',
     inject: 'body',
   }),
-  new webpack.optimize.CommonsChunkPlugin({
-    name: 'vendor',
-    filename: 'vendor.js',
-  }),
 ];
 
 const devPlugins = [
@@ -43,12 +36,8 @@ const devPlugins = [
   new DashboardPlugin(),
 ];
 
-const prodPlugins = [
-  new webpack.optimize.UglifyJsPlugin(),
-];
-
 const plugins = basePlugins
-  .concat(isProduction ? prodPlugins : devPlugins);
+  .concat(isProduction ? [] : devPlugins);
 
 module.exports = {
   target: 'web',
@@ -60,7 +49,6 @@ module.exports = {
     app: sources,
     vendor: [
       'babel-polyfill',
-      'basscss',
       'bluebird',
       'clipboard-js',
       'leven',
@@ -89,6 +77,14 @@ module.exports = {
     chunkFilename: '[id].chunk.js',
   },
 
+  optimization: {
+    splitChunks: {
+      name: 'vendor',
+      filename: 'vendor.js',
+    },
+    minimize: true,
+  },
+
   devtool: isProduction ? false : 'source-map',
 
   context: jsEntry,
@@ -110,28 +106,32 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.jsx?$/,
-        enforce: 'pre',
-        use: {
-          loader: 'source-map-loader',
-        },
-      },
-      {
         test: /\.css$/,
-        use: ['style-loader', 'css-loader', 'postcss-loader', 'cssnext-loader'],
+        use: [
+          'style-loader',
+          { loader: 'css-loader', options: { importLoaders: 1 } },
+          { loader: 'postcss-loader', options: {
+            ident: 'postcss',
+            plugins: () => [
+              postcssPresetEnvPlugin({
+                stage: 0,
+              }),
+            ],
+          } },
+        ],
       },
       {
         test: /\.js$/,
         exclude: /node_modules/,
         use: [
           {
-            loader: 'react-hot-loader',
-          },
-          {
             loader: 'babel-loader',
           },
           {
             loader: 'eslint-loader',
+          },
+          {
+            loader: 'source-map-loader',
           },
         ],
       },
