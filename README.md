@@ -10,7 +10,7 @@ See it live on http://rangle.github.io/treillage
 
 ### Dev
 ```bash
-$ npm run dev
+$ yarn start
 ```
 
 Open `http://localhost:3000` in your browser.
@@ -19,22 +19,22 @@ Open `http://localhost:3000` in your browser.
 
 #### Single Run
 ```bash
-$ npm run test
+$ yarn run test
 ```
 
 #### Watch Files
 ```bash
-$ npm run test:watch
+$ yarn run test:watch
 ```
 
 #### Coverage
 ```bash
-$ npm run cover
+$ yarn run cover
 ```
 
 ### Production
 ```bash
-$ npm start
+$ yarn build
 ```
 
 ## License

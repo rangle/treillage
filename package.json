@@ -10,11 +10,10 @@
     "build": "NODE_ENV=production webpack --config webpack.config.prod.js",
     "clean": "rimraf dist coverage",
     "cover": "./node_modules/.bin/nyc report --reporter=html",
-    "dev": "NODE_ENV=development webpack-dev-server --config webpack.config.dev.js",
+    "start": "NODE_ENV=development webpack-dev-server --config webpack.config.dev.js",
     "lint": "eslint .",
     "test": "./node_modules/.bin/nyc ./node_modules/.bin/ava 'src/**/*.test.js' --verbose && npm run cover",
-    "test:watch": "ava 'src/**/*.test.js'--watch",
-    "start": "NODE_ENV=production webpack-dev-server --colors --no-info --config webpack.config.prod.js"
+    "test:watch": "ava 'src/**/*.test.js' --watch"
   },
   "keywords": [
     "react",
