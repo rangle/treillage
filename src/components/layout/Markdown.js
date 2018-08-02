@@ -13,6 +13,6 @@ export const Markdown = ({ markdown, render }) => render ?
   );
 
 Markdown.propTypes = {
-  markdown: PropTypes.element,
-  render: PropTypes.boolean,
+  markdown: PropTypes.string,
+  render: PropTypes.bool,
 };

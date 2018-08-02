@@ -4,25 +4,22 @@ import './styles/styles.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { syncReduxAndRouter } from 'redux-simple-router';
-import { Router, hashHistory } from 'react-router';
+import { createBrowserHistory } from 'history';
+import { ConnectedRouter } from 'connected-react-router';
 import routes from './routes';
 import configureStore from './configureStore';
 
 import { fetchMyCards } from './redux/trello/actions';
 
-const store = configureStore({});
-syncReduxAndRouter(hashHistory, store);
-
+const history = createBrowserHistory();
+const store = configureStore({}, history);
 store.dispatch(fetchMyCards());
 
 ReactDOM.render(
-  <div>
-    <Provider store={store}>
-      <Router history={hashHistory}>
-        {routes}
-      </Router>
-    </Provider>
-  </div>,
+  <Provider store={store}>
+    <ConnectedRouter history={history}>
+      {routes}
+    </ConnectedRouter>
+  </Provider>,
   document.getElementById('root')
 );

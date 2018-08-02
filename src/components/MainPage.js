@@ -11,7 +11,6 @@ export class MainPage extends Component {
     error: PropTypes.object,
     renderMarkdown: PropTypes.bool.isRequired,
     isLoading: PropTypes.bool.isRequired,
-    route: PropTypes.object.isRequired,
   }
 
   render() {

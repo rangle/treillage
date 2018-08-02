@@ -1,52 +1,34 @@
 const path = require('path');
 const webpack = require('webpack');
-const postcssPresetEnvPlugin = require('postcss-preset-env');
-const HtmlWebpackPlugin  = require('html-webpack-plugin');
-const DashboardPlugin = require('webpack-dashboard/plugin');
 
 const config = {
   host: 'localhost',
   port: 3000,
 };
 
-const isProduction = process.env.NODE_ENV === 'production';
-
 const distPath = path.join(__dirname, './dist');
 const srcPath = path.join(__dirname, './src');
 const jsEntry = path.join(srcPath, 'index.js');
 
-const sources = [jsEntry];
-
 const basePlugins = [
   new webpack.DefinePlugin({
-    __DEV__: process.env.NODE_ENV !== 'production',
-    __PRODUCTION__: process.env.NODE_ENV === 'production',
+    __PRODUCTION__: true,
   }),
   new HtmlWebpackPlugin({
     template: path.join(srcPath, 'index.html'),
-    path: distPath,
-    filename: 'index.html',
-    inject: 'body',
+    inject: true,
   }),
 ];
 
-const devPlugins = [
-  new webpack.HotModuleReplacementPlugin(),
-  new webpack.NoEmitOnErrorsPlugin(),
-  new DashboardPlugin(),
-];
-
-const plugins = basePlugins
-  .concat(isProduction ? [] : devPlugins);
-
 module.exports = {
   target: 'web',
+  mode: isProduction ? 'production' : 'development',
   resolve: {
     modules: [srcPath, 'node_modules'],
     extensions: ['.js', '.jsx', '.json'],
   },
   entry: {
-    app: sources,
+    app: jsEntry,
     vendor: [
       '@babel/polyfill',
       'bluebird',
@@ -58,17 +40,15 @@ module.exports = {
       'react-dom',
       'redux',
       'react-redux',
-      'redux-logger',
       'redux-localstorage',
       'redux-thunk',
       'react-router',
-      'react-router-redux',
+      'connected-react-router',
       'semantic-ui-react',
       'history',
       'immutable',
     ],
   },
-
   output: {
     path: distPath,
     filename: '[name].[hash].js',
@@ -76,7 +56,6 @@ module.exports = {
     sourceMapFilename: '[name].[hash].js.map',
     chunkFilename: '[id].chunk.js',
   },
-
   optimization: {
     splitChunks: {
       name: 'vendor',
@@ -84,18 +63,13 @@ module.exports = {
     },
     minimize: true,
   },
-
-  devtool: isProduction ? false : 'source-map',
-
-  context: jsEntry,
-
-  plugins: plugins,
+  devtool: false,
+  context: srcPath,
+  plugins: basePlugins,
 
   devServer: {
     contentBase: distPath,
-    hot: !isProduction,
-    inline: !isProduction,
-    compress: isProduction,
+    compress: true,
     host: config.host,
     port: config.port,
     headers: {
@@ -129,9 +103,6 @@ module.exports = {
           },
           {
             loader: 'eslint-loader',
-          },
-          {
-            loader: 'source-map-loader',
           },
         ],
       },

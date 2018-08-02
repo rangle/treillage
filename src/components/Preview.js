@@ -77,7 +77,7 @@ export const Preview = ({ content, error, renderMarkdown, isLoading, handleClipb
 Preview.propTypes = {
   content: PropTypes.array,
   error: PropTypes.object,
-  renderMarkdown: PropTypes.boolean,
-  isLoading: PropTypes.boolean,
+  renderMarkdown: PropTypes.bool,
+  isLoading: PropTypes.bool,
   handleClipboard: PropTypes.func,
 };

@@ -26,7 +26,7 @@ const styles = {
 
 Alert.propTypes = {
   children: PropTypes.element,
-  isVisible: PropTypes.boolean,
+  isVisible: PropTypes.bool,
   status: PropTypes.OneOf(['info', 'warning', 'success', 'error']),
   className: PropTypes.string,
   style: PropTypes.Object,

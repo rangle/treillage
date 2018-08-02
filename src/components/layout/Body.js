@@ -52,6 +52,6 @@ export const Body = ({ item, render }) => {
 };
 
 Body.propTypes = {
-  item: PropTypes.element,
-  render: PropTypes.boolean,
+  item: PropTypes.object,
+  render: PropTypes.bool,
 };

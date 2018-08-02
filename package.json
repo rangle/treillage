@@ -7,14 +7,14 @@
     "yarn": "1.7.0"
   },
   "scripts": {
-    "build": "NODE_ENV=production webpack",
+    "build": "NODE_ENV=production webpack --config webpack.config.prod.js",
     "clean": "rimraf dist coverage",
     "cover": "./node_modules/.bin/nyc report --reporter=html",
-    "dev": "NODE_ENV=development webpack-dev-server",
+    "dev": "NODE_ENV=development webpack-dev-server --config webpack.config.dev.js",
     "lint": "eslint .",
     "test": "./node_modules/.bin/nyc ./node_modules/.bin/ava 'src/**/*.test.js' --verbose && npm run cover",
     "test:watch": "ava 'src/**/*.test.js'--watch",
-    "start": "NODE_ENV=production webpack-dev-server --colors --no-info"
+    "start": "NODE_ENV=production webpack-dev-server --colors --no-info --config webpack.config.prod.js"
   },
   "keywords": [
     "react",
@@ -57,7 +57,6 @@
     "url-loader": "^1.0.1",
     "webpack": "^4.16.3",
     "webpack-cli": "^3.1.0",
-    "webpack-dashboard": "^2.0.0",
     "webpack-dev-server": "^3.1.5",
     "webpack-hot-middleware": "^2.18.0"
   },
@@ -65,23 +64,21 @@
     "basscss": "^8.0.4",
     "bluebird": "^3.5.0",
     "clipboard-js": "^0.3.3",
+    "connected-react-router": "^4.3.0",
     "immutable": "^3.7.5",
     "leven": "^2.1.0",
     "marked": "^0.4.0",
     "moment": "^2.13.0",
     "prop-types": "^15.5.8",
     "ramda": "^0.19.1",
-    "react": "^15.5.4",
-    "react-dom": "^15.5.4",
-    "react-redux": "^4.0.0",
-    "react-router": "^2.0.0",
-    "react-router-redux": "^3.0.0",
-    "redux": "^3.0.4",
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1",
+    "react-redux": "^5.0.7",
+    "react-router": "^4.3.1",
+    "redux": "^4.0.0",
     "redux-localstorage": "^0.4.0",
-    "redux-logger": "^2.0.4",
-    "redux-simple-router": "^1.0.2",
-    "redux-thunk": "^1.0.0",
-    "semantic-ui-react": "^0.68.0"
+    "redux-thunk": "^2.3.0",
+    "semantic-ui-react": "^0.82.1"
   },
   "ava": {
     "require": [

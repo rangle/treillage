@@ -11,6 +11,6 @@ export const Section = ({ item, render }) => (
 );
 
 Section.propTypes = {
-  item: PropTypes.element,
-  render: PropTypes.boolean,
+  item: PropTypes.object,
+  render: PropTypes.bool,
 };

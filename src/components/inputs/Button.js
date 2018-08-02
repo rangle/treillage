@@ -26,7 +26,7 @@ export const Button = (props) => {
 };
 
 Button.propTypes = {
-  children: PropTypes.element,
+  children: PropTypes.string,
   className: PropTypes.string,
   type: PropTypes.string,
   onClick: PropTypes.func,

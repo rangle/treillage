@@ -2,8 +2,8 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import { fromJS } from 'immutable';
 import persistState from 'redux-localstorage';
 import thunk from 'redux-thunk';
+import { connectRouter, routerMiddleware } from 'connected-react-router';
 import promiseMiddleware from './middleware/promiseMiddleware';
-import logger from './redux/logger';
 import rootReducer from './redux/rootReducer';
 
 const storageConfig = {
@@ -26,13 +26,11 @@ if (__DEV__) {
   }
 }
 
-function configureStore(initialState) {
+function configureStore(initialState, history) {
   const store = composeEnhancers(
-    __DEV__
-      ? applyMiddleware(promiseMiddleware, thunk, logger)
-      : applyMiddleware(promiseMiddleware, thunk),
+    applyMiddleware(promiseMiddleware, thunk, routerMiddleware(history)),
     persistState('session', storageConfig)
-  )(createStore)(rootReducer, initialState);
+  )(createStore)(connectRouter(history)(rootReducer), initialState);
 
   if (module.hot) {
     module.hot.accept('./redux/rootReducer', () => {

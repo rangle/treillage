@@ -19,6 +19,6 @@ const styles = {
 
 NavigatorItem.propTypes = {
   children: PropTypes.element,
-  isVisible: PropTypes.boolean,
+  isVisible: PropTypes.bool,
   className: PropTypes.string,
 };
