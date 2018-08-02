@@ -72,6 +72,10 @@ module.exports = {
 
   devServer: {
     contentBase: distPath,
+    proxy: {
+      '/treillage': '/',
+    },
+    inline: true,
     compress: true,
     host: config.host,
     port: config.port,
