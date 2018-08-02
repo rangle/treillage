@@ -1,5 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
+const postcssPresetEnvPlugin = require('postcss-preset-env');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const config = {
   host: 'localhost',
@@ -12,6 +14,7 @@ const jsEntry = path.join(srcPath, 'index.js');
 
 const basePlugins = [
   new webpack.DefinePlugin({
+    __DEV__: false,
     __PRODUCTION__: true,
   }),
   new HtmlWebpackPlugin({
@@ -22,7 +25,7 @@ const basePlugins = [
 
 module.exports = {
   target: 'web',
-  mode: isProduction ? 'production' : 'development',
+  mode: 'production',
   resolve: {
     modules: [srcPath, 'node_modules'],
     extensions: ['.js', '.jsx', '.json'],
@@ -52,7 +55,7 @@ module.exports = {
   output: {
     path: distPath,
     filename: '[name].[hash].js',
-    publicPath: isProduction ? '/treillage/' : '/',
+    publicPath: '/treillage/',
     sourceMapFilename: '[name].[hash].js.map',
     chunkFilename: '[id].chunk.js',
   },

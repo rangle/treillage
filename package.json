@@ -32,8 +32,9 @@
     "@babel/polyfill": "^7.0.0-beta.55",
     "@babel/preset-env": "^7.0.0-beta.55",
     "@babel/preset-react": "^7.0.0-beta.55",
+    "@babel/register": "^7.0.0-beta.55",
     "@babel/runtime": "^7.0.0-beta.55",
-    "ava": "^0.25.0",
+    "ava": "1.0.0-beta.6",
     "babel-eslint": "^8.2.6",
     "babel-loader": "^8.0.0-beta",
     "chalk": "^2.4.1",
@@ -82,8 +83,12 @@
   },
   "ava": {
     "require": [
-      "babel-core/register"
+      "@babel/register"
     ],
-    "babel": "inherit"
+    "babel": {
+      "testOptions": {
+        "babelrc": true
+      }
+    }
   }
 }

@@ -1,7 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const postcssPresetEnvPlugin = require('postcss-preset-env');
-const HtmlWebpackPlugin  = require('html-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const config = {
   host: 'localhost',
@@ -14,6 +14,7 @@ const jsEntry = path.join(srcPath, 'index.js');
 const basePlugins = [
   new webpack.DefinePlugin({
     __DEV__: true,
+    __PROD__: false,
   }),
   new HtmlWebpackPlugin({
     template: path.join(srcPath, 'index.html'),
