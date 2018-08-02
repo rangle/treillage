@@ -1,0 +1,62 @@
+version: 2.0
+jobs:
+  build:
+    docker:
+      - image: circleci/node:8.11.3
+    steps:
+      - checkout
+      - restore_cache:
+          name: "Restore Yarn Package Cache"
+          keys:
+            - yarn-packages-{{ checksum "yarn.lock" }}
+      - run:
+          name: "Installing Dependencies"
+          command:  |
+            yarn -v
+            yarn install
+      - save_cache:
+          key: yarn-packages-{{ checksum "yarn.lock" }}
+          paths:
+            - node_modules
+      - run:
+          name: "Linting & Tests"
+          command: |
+            yarn run lint
+            yarn run test
+      - run:
+          name: "Build"
+          command: |
+            yarn run build
+      - persist_to_workspace:
+          root: /home/circleci/project
+          paths:
+            - .circleci
+            - dist
+
+  deploy:
+    docker:
+      - image: circleci/node:8.11.3
+    working_directory: /tmp/workspace
+    steps:
+      - attach_workspace:
+          at: /tmp/workspace
+      - run:
+          name: "Deploy"
+          command: |
+            .circleci/scripts/deploy-ghpages.sh dist
+
+workflows:
+  version: 2
+  ci:
+    jobs:
+      - build:
+          filters:
+            branches:
+              ignore:
+                - gh-pages
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
