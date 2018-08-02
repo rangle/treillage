@@ -1,6 +1,7 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
-const Navigator = ({ children }) => {
+export const Navigator = ({ children }) => {
   return (
     <div
       className="flex flex-stretch fixed top-0 left-0 right-0 z3"
@@ -17,4 +18,6 @@ const styles = {
   },
 };
 
-export default Navigator;
+Navigator.propTypes = {
+  children: PropTypes.element,
+};

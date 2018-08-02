@@ -1,4 +1,4 @@
-import isPromise from 'utils/isPromise';
+import isPromise from '../utils/isPromise';
 
 export default function promiseMiddleware({ dispatch }) {
   return next => action => {
@@ -10,7 +10,7 @@ export default function promiseMiddleware({ dispatch }) {
     const { promise, data } = payload;
     const { REQUEST, SUCCESS, FAILURE } = types;
 
-   /**
+    /**
     * Dispatch the pending action
     */
     dispatch({

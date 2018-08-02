@@ -40,7 +40,6 @@ test('Single paragraph rule', t => {
     ...card,
     desc: card.desc.replace(',', '\n\n'),
   };
-  console.log(multiParagraphCard.desc);
   const error = singleParagraph(multiParagraphCard);
   t.is(error.text, errors.singleParagraph);
 });

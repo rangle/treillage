@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Modal as SemanticModal } from 'semantic-ui-react';
-import Button from 'components/inputs/Button';
+import { Button } from '../inputs/Button';
 
-export default class Modal extends Component {
+export class Modal extends Component {
   static propTypes = {
     isVisible: PropTypes.bool,
     type: PropTypes.string,
@@ -46,7 +46,6 @@ export default class Modal extends Component {
     return (
       <SemanticModal
         open={this.state.visible}
-        dimmer={false}
         style={{ ...styles.base, style }}>
         <div style={styles.content}>
           { children }
@@ -56,7 +55,7 @@ export default class Modal extends Component {
     );
   }
 
-   handleClose() {
-     this.setState({ visible: false });
-   }
+  handleClose() {
+    this.setState({ visible: false });
+  }
 }

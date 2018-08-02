@@ -1,9 +1,10 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
-const Content = ({ children, style = {}, isVisible }) => {
+export const Content = ({ children, style = {}, isVisible }) => {
   return (
     <div
-      className={ `mt4 m2 p1` }
+      className={ 'mt4 m2 p1' }
       style={{ ...styles.base, style }}>
       { isVisible ? children : null }
     </div>
@@ -14,4 +15,8 @@ const styles = {
   base: {},
 };
 
-export default Content;
+Content.propTypes = {
+  children: PropTypes.element,
+  style: PropTypes.object,
+  isVisible: PropTypes.bool,
+};

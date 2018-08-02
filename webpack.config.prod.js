@@ -1,66 +1,39 @@
 const path = require('path');
 const webpack = require('webpack');
-const HtmlWebpackPlugin  = require('html-webpack-plugin');
-const DashboardPlugin = require('webpack-dashboard/plugin');
+const postcssPresetEnvPlugin = require('postcss-preset-env');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const config = {
   host: 'localhost',
   port: 3000,
 };
 
-const isProduction = process.env.NODE_ENV === 'production';
-
 const distPath = path.join(__dirname, './dist');
 const srcPath = path.join(__dirname, './src');
 const jsEntry = path.join(srcPath, 'index.js');
 
-const sources = [jsEntry];
-
-if (!isProduction) {
-  sources.unshift(`webpack-dev-server/client?http://${config.host}:${config.port}/`);
-}
-
 const basePlugins = [
   new webpack.DefinePlugin({
-    __DEV__: process.env.NODE_ENV !== 'production',
-    __PRODUCTION__: process.env.NODE_ENV === 'production',
+    __DEV__: false,
+    __PRODUCTION__: true,
   }),
   new HtmlWebpackPlugin({
     template: path.join(srcPath, 'index.html'),
-    path: distPath,
-    filename: 'index.html',
-    inject: 'body',
-  }),
-  new webpack.optimize.CommonsChunkPlugin({
-    name: 'vendor',
-    filename: 'vendor.js',
+    inject: true,
   }),
 ];
-
-const devPlugins = [
-  new webpack.HotModuleReplacementPlugin(),
-  new webpack.NoEmitOnErrorsPlugin(),
-  new DashboardPlugin(),
-];
-
-const prodPlugins = [
-  new webpack.optimize.UglifyJsPlugin(),
-];
-
-const plugins = basePlugins
-  .concat(isProduction ? prodPlugins : devPlugins);
 
 module.exports = {
   target: 'web',
+  mode: 'production',
   resolve: {
     modules: [srcPath, 'node_modules'],
     extensions: ['.js', '.jsx', '.json'],
   },
   entry: {
-    app: sources,
+    app: jsEntry,
     vendor: [
-      'babel-polyfill',
-      'basscss',
+      '@babel/polyfill',
       'bluebird',
       'clipboard-js',
       'leven',
@@ -70,37 +43,36 @@ module.exports = {
       'react-dom',
       'redux',
       'react-redux',
-      'redux-logger',
-      'redux-form',
       'redux-localstorage',
       'redux-thunk',
       'react-router',
-      'react-router-redux',
+      'connected-react-router',
       'semantic-ui-react',
       'history',
       'immutable',
     ],
   },
-
   output: {
     path: distPath,
     filename: '[name].[hash].js',
-    publicPath: isProduction ? '/treillage/' : '/',
+    publicPath: '/treillage/',
     sourceMapFilename: '[name].[hash].js.map',
     chunkFilename: '[id].chunk.js',
   },
-
-  devtool: isProduction ? false : 'source-map',
-
-  context: jsEntry,
-
-  plugins: plugins,
+  optimization: {
+    splitChunks: {
+      name: 'vendor',
+      filename: 'vendor.js',
+    },
+    minimize: true,
+  },
+  devtool: false,
+  context: srcPath,
+  plugins: basePlugins,
 
   devServer: {
     contentBase: distPath,
-    hot: !isProduction,
-    inline: !isProduction,
-    compress: isProduction,
+    compress: true,
     host: config.host,
     port: config.port,
     headers: {
@@ -111,23 +83,24 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.jsx?$/,
-        enforce: 'pre',
-        use: {
-          loader: 'source-map-loader',
-        },
-      },
-      {
         test: /\.css$/,
-        use: ['style-loader', 'css-loader', 'postcss-loader', 'cssnext-loader'],
+        use: [
+          'style-loader',
+          { loader: 'css-loader', options: { importLoaders: 1 } },
+          { loader: 'postcss-loader', options: {
+            ident: 'postcss',
+            plugins: () => [
+              postcssPresetEnvPlugin({
+                stage: 0,
+              }),
+            ],
+          } },
+        ],
       },
       {
         test: /\.js$/,
         exclude: /node_modules/,
         use: [
-          {
-            loader: 'react-hot-loader',
-          },
           {
             loader: 'babel-loader',
           },

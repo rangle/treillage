@@ -1,9 +1,8 @@
 import R from 'ramda';
-import Q from 'q';
 import Promise from 'bluebird';
 import moment from 'moment';
 
-import Rules from 'services/rules';
+import Rules from './rules';
 
 const get = (path) => new Promise((resolve, reject) => {
   Trello.get(path, resolve, reject);
@@ -46,9 +45,9 @@ const applyRules = (card) => {
 
 const getAuthUser = () => {
   return Trello.rest('GET', 'members/me')
-  .then(
-    me => me,
-    error => console.error(error));
+    .then(
+      me => me,
+      error => console.error(error));
 };
 
 const getActions = (card) => {
@@ -57,20 +56,20 @@ const getActions = (card) => {
 
   return get(`/cards/${card.id}/actions?filter=commentCard%2CcreateCard`)
     .then(actions => actions,
-          error => console.error(error));
+      error => console.error(error));
 };
 
-const filterByEditor = async (lists) => {
+const filterByEditor = async(lists) => {
   // Assume the auth user is an editor
   const editor = await getAuthUser();
 
   return lists.filter(list => new RegExp(editor.fullName).test(list.name));
 };
 
-const filterByMention = async (list) => {
+const filterByMention = async(list) => {
   const user = await getAuthUser();
 
-  return Promise.filter(list, async (card) => {
+  return Promise.filter(list, async(card) => {
     if (!card.isSectionHeading) {
       try {
         const actions = await getActions(card);
@@ -81,8 +80,9 @@ const filterByMention = async (list) => {
         console.error(error);
       }
     }
+    return null;
   })
-  .then(filtered => filtered);
+    .then(filtered => filtered);
 };
 
 const addFormatting = (card) => R.merge(card, {
@@ -91,13 +91,12 @@ const addFormatting = (card) => R.merge(card, {
 });
 
 const addAttachmentURLs = (card) => {
-  if (card.idAttachmentCover) {
-    return get(`/cards/${card.id}/attachments/${card.idAttachmentCover}`)
-      .then(attachment => R.merge(card, {
-        image: attachment.url,
-      }));
-  }
-  return Q.when(card);
+  if (!card.idAttachmentCover) return card;
+
+  return get(`/cards/${card.id}/attachments/${card.idAttachmentCover}`)
+    .then(attachment => R.merge(card, {
+      image: attachment.url,
+    }));
 };
 
 // const formatCard = (card) => card.isSectionHeading ?
@@ -139,7 +138,7 @@ const getMyCards = R.pipeP(
   R.map(applyRules),
   R.map(addFormatting),
   R.map(addAttachmentURLs),
-  Q.all,
+  Promise.all,
 );
 
 const getMySection = R.pipeP(
@@ -153,7 +152,7 @@ const getMySection = R.pipeP(
   R.map(applyRules),
   R.map(addFormatting),
   R.map(addAttachmentURLs),
-  Q.all,
+  Promise.all,
 );
 
 const getAllCards = R.pipeP(
@@ -166,7 +165,7 @@ const getAllCards = R.pipeP(
   R.map(applyRules),
   R.map(addFormatting),
   R.map(addAttachmentURLs),
-  Q.all,
+  Promise.all,
   // (renderedCards) => renderedCards.join('\n\n'),
 );
 

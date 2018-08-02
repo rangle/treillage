@@ -1,10 +1,11 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Grid } from 'semantic-ui-react';
 
-import { PASS } from 'services/rules';
-import Button from './inputs/Button';
+import { PASS } from '../../services/rules';
+import { Button } from '../inputs/Button';
 
-const Messages = ({ list, handleIgnore }) => {
+export const Messages = ({ list, handleIgnore }) => {
   const styles = {
     message: {
       fontSize: '14px',
@@ -28,11 +29,11 @@ const Messages = ({ list, handleIgnore }) => {
     case 'maxLength':
       help = (
         <div>
-          {"Got a lot to say? Try making a "}
+          {'Got a lot to say? Try making a '}
           <a href="https://docs.google.com/document/u/0/?tgif=d">Google Doc</a>
-          {" Or a "}
+          {' Or a '}
           <a href="https://github.com/rangle/hub/wiki/_new">Wiki Article</a>
-          {"."}
+          {'.'}
         </div>
       );
       break;
@@ -45,32 +46,34 @@ const Messages = ({ list, handleIgnore }) => {
   return (
     <div style={styles.message}>
       {list.length === 0
-      ? <div style={styles.pass}>{PASS}</div>
-      : list.map((message, i) => (
-        <Grid verticalAlign={"bottom"} columns="equal" key={`error-message-${i}`}>
-          <Grid.Row>
-            <Grid.Column width={14}>
-              <div style={styles.error}>{message.text}</div>
-              {renderHelp(message.rule)}
-            </Grid.Column>
-            <Grid.Column>
-              {message.options &&
+        ? <div style={styles.pass}>{PASS}</div>
+        : list.map((message, i) => (
+          <Grid verticalAlign={'bottom'} columns="equal" key={`error-message-${i}`}>
+            <Grid.Row>
+              <Grid.Column width={14}>
+                <div style={styles.error}>{message.text}</div>
+                {renderHelp(message.rule)}
+              </Grid.Column>
+              <Grid.Column>
+                {message.options &&
                 message.options.map((option, j) => option === 'ignorable' &&
                   <Button
                     style={styles.button}
                     size="mini"
                     key={`error-${i}-option-${j}`}
                     onClick={() => handleIgnore(message)}
-                   >
-                     {"Ignore"}
+                  >
+                    {'Ignore'}
                   </Button>)}
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
-      ))}
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
+        ))}
     </div>
   );
 };
 
-
-export default Messages;
+Messages.propTypes = {
+  list: PropTypes.array,
+  handleIgnore: PropTypes.func,
+};

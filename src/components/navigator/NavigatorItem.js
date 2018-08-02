@@ -1,6 +1,7 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
-const NavigatorItem = ({ children, isVisible = true, className = '' }) => {
+export const NavigatorItem = ({ children, isVisible = true, className = '' }) => {
   const visibleClass = isVisible ? 'block' : 'hide';
 
   return (
@@ -16,4 +17,8 @@ const styles = {
   base: {},
 };
 
-export default NavigatorItem;
+NavigatorItem.propTypes = {
+  children: PropTypes.element,
+  isVisible: PropTypes.bool,
+  className: PropTypes.string,
+};

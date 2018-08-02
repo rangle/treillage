@@ -1,6 +1,6 @@
 // import R from 'ramda';
 import leven from 'leven';
-import defaultNames from 'dictionary/names.json';
+import defaultNames from '../dictionary/names.json';
 
 export const PASS = 'Checks passed.';
 
@@ -11,7 +11,7 @@ export default function Rules({ maxSize = 100, names = defaultNames.list }) {
   this.errors = {
     noEmptyBody: 'This card\'s description is empty.',
     maxLength: `This card is over ${this.maxSize} characters long, please shorten.`,
-    singleParagraph: `This card has multiple paragraphs.`,
+    singleParagraph: 'This card has multiple paragraphs.',
     nameCheck: (message) => `Possible mispellings. \n${message}`,
   };
 
@@ -92,6 +92,8 @@ export default function Rules({ maxSize = 100, names = defaultNames.list }) {
         };
       }
     }
+
+    return null;
   };
 
   this.list = [
