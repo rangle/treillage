@@ -1,6 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const postcssPresetEnvPlugin = require('postcss-preset-env');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const distPath = path.join(__dirname, './dist');
 const srcPath = path.join(__dirname, './src');
@@ -10,6 +11,10 @@ const basePlugins = [
   new webpack.DefinePlugin({
     __DEV__: false,
     __PRODUCTION__: true,
+  }),
+  new HtmlWebpackPlugin({
+    template: path.join(srcPath, 'index.html'),
+    inject: true,
   }),
 ];
 
