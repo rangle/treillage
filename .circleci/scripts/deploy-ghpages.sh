@@ -2,10 +2,16 @@
 # ideas used from https://gist.github.com/motemen/8595451
 
 # abort the script if there is a non-zero error
-set -e
+set -ex
 
 # show where we are on the machine
 pwd
+
+# update our known_hosts if on circleci
+if [ ! -z $CIRCLECI ]; then
+  mv .ssh ~/.ssh
+fi
+
 
 remote=$(git config remote.origin.url)
 
@@ -21,13 +27,13 @@ fi
 mkdir gh-pages-branch
 cd gh-pages-branch
 # now lets setup a new repo so we can update the gh-pages branch
-git config --global user.email "$GH_EMAIL" > /dev/null 2>&1
-git config --global user.name "$GH_NAME" > /dev/null 2>&1
+git config --global user.email "$GH_EMAIL"
+git config --global user.name "$GH_NAME"
 git init
 git remote add --fetch origin "$remote"
 
 # switch into the the gh-pages branch
-if git rev-parse --verify origin/gh-pages > /dev/null 2>&1
+if git rev-parse --verify origin/gh-pages
 then
     git checkout gh-pages
     # delete any old site as we are going to replace it
@@ -45,7 +51,7 @@ git add -A
 # now commit, ignoring branch gh-pages doesn't seem to work, so trying skip
 git commit --allow-empty -m "Deploy to GitHub pages [ci skip]"
 # and push, but send any output to /dev/null to hide anything sensitive
-git push --force --quiet origin gh-pages > /dev/null 2>&1
+git push --force --quiet origin gh-pages
 
 # go back to where we started and remove the gh-pages git repo we made and used
 # for deployment

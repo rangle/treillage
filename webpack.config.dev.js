@@ -7,7 +7,6 @@ const config = {
   host: 'localhost',
   port: 3000,
 };
-const distPath = path.join(__dirname, './dist');
 const srcPath = path.join(__dirname, './src');
 const jsEntry = path.join(srcPath, 'index.js');
 
@@ -39,17 +38,10 @@ module.exports = {
   entry: {
     app: jsEntry,
   },
-  output: {
-    path: distPath,
-    filename: '[name].js',
-    publicPath: '/',
-    sourceMapFilename: '[name].js.map',
-  },
   devtool: 'source-map',
   context: srcPath,
   plugins: plugins,
   devServer: {
-    contentBase: distPath,
     hot: true,
     inline: true,
     host: config.host,
