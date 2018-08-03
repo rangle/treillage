@@ -4,15 +4,20 @@ import defaultNames from '../dictionary/names.json';
 
 export const PASS = 'Checks passed.';
 
-export default function Rules({ maxSize = 100, names = defaultNames.list }) {
-  this.maxSize = maxSize;
+export default function Rules({ maxCharacterSize = 100, names = defaultNames.list }) {
+  this.maxCharacterSize = maxCharacterSize;
+  this.maxImageSize = {
+    height: 600,
+    width: 800,
+  };
   this.names = names;
 
   this.errors = {
     noEmptyBody: 'This card\'s description is empty.',
-    maxLength: `This card is over ${this.maxSize} characters long, please shorten.`,
+    maxLength: `This card is over ${this.maxCharacterSize} characters long, please shorten.`,
     singleParagraph: 'This card has multiple paragraphs.',
     nameCheck: (message) => `Possible mispellings. \n${message}`,
+    maxResolution: (size) => `Image with a resolution of ${size.height}px height and ${size.width}px width.`,
   };
 
   this.noEmptyBody = (card) => card.desc.length === 0 && {
@@ -23,7 +28,7 @@ export default function Rules({ maxSize = 100, names = defaultNames.list }) {
   this.maxLength = (card) => {
     const size = (card.name + ' ' + card.desc).split(' ').length;
 
-    return size > this.maxSize && {
+    return size > this.maxCharacterSize && {
       rule: 'maxLength',
       text: this.errors.maxLength,
     };
@@ -96,10 +101,27 @@ export default function Rules({ maxSize = 100, names = defaultNames.list }) {
     return null;
   };
 
+  this.maxResolution = (card) => {
+    if (!card.image) return null;
+
+    const image = new window.Image();
+    image.src = card.image;
+    const { height, width } = image;
+
+    return (
+      height > this.maxImageSize.height ||
+      width > this.maxImageSize.width
+    ) && {
+      rule: 'maxResolution',
+      text: this.errors.maxResolution({ height, width }),
+    };
+  };
+
   this.list = [
     this.noEmptyBody,
     this.maxLength,
     this.singleParagraph,
     this.nameCheck,
+    this.maxResolution,
   ];
 }

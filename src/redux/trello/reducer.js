@@ -19,8 +19,9 @@ const ACTION_HANDLERS = {
       .set('isLoading', false);
   },
   [FETCH_CARDS.FAILURE]: (state, action) => {
+    console.log(action.error);
     return state
-      .set('error', fromJS(action.error.toString()))
+      .set('error', new Error(action.error))
       .set('isLoading', false);
   },
   [SET_MARKDOWN_RENDER]: (state, action) => {

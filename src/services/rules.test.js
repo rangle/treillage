@@ -23,7 +23,7 @@ test('No empty body rule', t => {
 });
 
 test('No long card rule',  t => {
-  const { maxLength, errors } = new Rules({ maxSize: 70, names: []});
+  const { maxLength, errors } = new Rules({ maxCharacterSize: 70, names: []});
   const longCard = {
     ...card,
     desc: card.desc + card.desc,

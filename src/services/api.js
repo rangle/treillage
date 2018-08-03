@@ -99,10 +99,10 @@ const getMyCards = R.pipeP(
   R.flatten,
   R.reject(hasLabel('HOLD')),
   filterByMention,
-  R.map(applyRules),
-  R.map(applyTextFormatting),
   R.map(addAttachmentURLs),
   Promise.all,
+  R.map(applyRules),
+  R.map(applyTextFormatting),
 );
 
 const getMySection = R.pipeP(
@@ -113,10 +113,10 @@ const getMySection = R.pipeP(
   (listOfPromises) => Promise.all(listOfPromises),
   R.flatten,
   R.reject(hasLabel('HOLD')),
-  R.map(applyRules),
-  R.map(applyTextFormatting),
   R.map(addAttachmentURLs),
   Promise.all,
+  R.map(applyRules),
+  R.map(applyTextFormatting),
 );
 
 const getAllCards = R.pipeP(
@@ -126,10 +126,10 @@ const getAllCards = R.pipeP(
   (listOfPromises) => Promise.all(listOfPromises),
   R.flatten,
   R.reject(hasLabel('HOLD')),
-  R.map(applyRules),
-  R.map(applyTextFormatting),
   R.map(addAttachmentURLs),
   Promise.all,
+  R.map(applyRules),
+  R.map(applyTextFormatting),
   // (renderedCards) => renderedCards.join('\n\n'),
 );
 
