@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { updateCard } from '../../services/api';
-import { formatItem } from '../../utils/format';
+import { formatItem } from '../../utils/formatting/markdown';
 
 import { Markdown } from './Markdown';
 import { Messages } from './Messages';
