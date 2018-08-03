@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Markdown } from './Markdown';
-import { formatSectionHeader } from '../../utils/format';
+import { formatSectionHeader } from '../../utils/formatting/markdown';
 
 export const Section = ({ item, render }) => (
   <Markdown

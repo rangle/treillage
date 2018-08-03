@@ -2,32 +2,12 @@ import R from 'ramda';
 import Promise from 'bluebird';
 import moment from 'moment';
 
+import { applyTextFormatting } from '../utils/formatting/text';
 import Rules from './rules';
 
 const get = (path) => new Promise((resolve, reject) => {
   Trello.get(path, resolve, reject);
 });
-
-const replaceDoubleQuotes = (string) => string.replace(
-  /\"([^\"]*?)\"/g,
-  (_, match) => `“${match}”`
-);
-
-const replaceApostrophes = (string) => string.replace(/\'/g, '’');
-
-const prepare = R.pipe(
-  replaceDoubleQuotes,
-  replaceApostrophes
-);
-
-const hasEndOfSentencePunctuation = (string) => '.!?'.indexOf(string.slice(-1)) === -1;
-
-const addPeriodIfMissing = (string) => {
-  const trimmed = string.trim();
-  return hasEndOfSentencePunctuation(trimmed) ?
-    trimmed + '.'
-    : trimmed;
-};
 
 const applyRules = (card) => {
   if (!card.isSectionHeading) {
@@ -85,11 +65,6 @@ const filterByMention = async(list) => {
     .then(filtered => filtered);
 };
 
-const addFormatting = (card) => R.merge(card, {
-  title: card.title || prepare(addPeriodIfMissing(card.name)),
-  body: card.desc && prepare(card.desc),
-});
-
 const addAttachmentURLs = (card) => {
   if (!card.idAttachmentCover) return card;
 
@@ -99,22 +74,11 @@ const addAttachmentURLs = (card) => {
     }));
 };
 
-// const formatCard = (card) => card.isSectionHeading ?
-//   `## ${card.title}\n\n_Section edited by [[${card.byline}]]_.`
-//   : `__${prepare(addPeriodIfMissing(card.name))}__ ${prepare(card.desc)}`;
-
-// const log = (heading) => (item) => {
-//   /* eslint no-console: 0 */
-//   console.log(heading, item);
-//   return item;
-// };
-
 const makeSectionCard = (list) => ({
   isSectionHeading: true,
   title: list.name.split('/')[0],
   byline: list.name.split('/')[1],
 });
-
 
 const getList = (list) => get(`/lists/${list.id}/cards`)
   .then((cards) => cards.length ?
@@ -135,10 +99,10 @@ const getMyCards = R.pipeP(
   R.flatten,
   R.reject(hasLabel('HOLD')),
   filterByMention,
-  R.map(applyRules),
-  R.map(addFormatting),
   R.map(addAttachmentURLs),
   Promise.all,
+  R.map(applyRules),
+  R.map(applyTextFormatting),
 );
 
 const getMySection = R.pipeP(
@@ -149,10 +113,10 @@ const getMySection = R.pipeP(
   (listOfPromises) => Promise.all(listOfPromises),
   R.flatten,
   R.reject(hasLabel('HOLD')),
-  R.map(applyRules),
-  R.map(addFormatting),
   R.map(addAttachmentURLs),
   Promise.all,
+  R.map(applyRules),
+  R.map(applyTextFormatting),
 );
 
 const getAllCards = R.pipeP(
@@ -162,10 +126,10 @@ const getAllCards = R.pipeP(
   (listOfPromises) => Promise.all(listOfPromises),
   R.flatten,
   R.reject(hasLabel('HOLD')),
-  R.map(applyRules),
-  R.map(addFormatting),
   R.map(addAttachmentURLs),
   Promise.all,
+  R.map(applyRules),
+  R.map(applyTextFormatting),
   // (renderedCards) => renderedCards.join('\n\n'),
 );
 

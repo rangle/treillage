@@ -9,10 +9,10 @@
   "scripts": {
     "build": "NODE_ENV=production webpack --config webpack.config.prod.js",
     "clean": "rimraf dist coverage",
-    "cover": "./node_modules/.bin/nyc report --reporter=html",
     "start": "NODE_ENV=development webpack-dev-server --config webpack.config.dev.js",
     "lint": "eslint .",
-    "test": "./node_modules/.bin/nyc ./node_modules/.bin/ava 'src/**/*.test.js' --verbose && npm run cover",
+    "test": "ava 'src/**/*.test.js' --verbose",
+    "test:coverage": "yarn test && ./node_modules/.bin/nyc report --reporter=html",
     "test:watch": "ava 'src/**/*.test.js' --watch"
   },
   "keywords": [
@@ -70,7 +70,7 @@
     "marked": "^0.4.0",
     "moment": "^2.13.0",
     "prop-types": "^15.5.8",
-    "ramda": "^0.19.1",
+    "ramda": "0.19.1",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-redux": "^5.0.7",

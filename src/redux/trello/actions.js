@@ -11,7 +11,7 @@ const asyncAction = (asyncConstants, promise, data, meta) => ({
   },
 });
 
-export const setContent = (content) => {
+export const setContentAction = (content) => {
   return {
     type: SET_CONTENT,
     payload: {
@@ -20,14 +20,14 @@ export const setContent = (content) => {
   };
 };
 
-export const setMarkdownRender = (bool) => {
+export const setMarkdownRenderAction = (bool) => {
   return {
     type: SET_MARKDOWN_RENDER,
     renderMarkdown: bool,
   };
 };
 
-export const fetchMyCards = () => {
+export const getMyCardsAction = () => {
   return (dispatch) => {
     const authenticationFailure = () =>
       dispatch({
@@ -43,7 +43,7 @@ export const fetchMyCards = () => {
   };
 };
 
-export const fetchMySection = () => {
+export const getMySectionAction = () => {
   return (dispatch) => {
     const authenticationFailure = () =>
       dispatch({
@@ -59,7 +59,7 @@ export const fetchMySection = () => {
   };
 };
 
-export const fetchAllCards = () => {
+export const getAllCardsAction = () => {
   return (dispatch) => {
     const authenticationFailure = () =>
       dispatch({

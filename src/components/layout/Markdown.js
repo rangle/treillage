@@ -2,7 +2,7 @@ import React from 'react';
 import marked from 'marked';
 import PropTypes from 'prop-types';
 
-import { replaceWikiLinks } from '../../utils/format';
+import { replaceWikiLinks } from '../../utils/formatting/markdown';
 
 export const Markdown = ({ markdown, render }) => render ?
   (

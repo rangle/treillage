@@ -9,11 +9,8 @@ import { ConnectedRouter } from 'connected-react-router';
 import routes from './routes';
 import configureStore from './configureStore';
 
-import { fetchMyCards } from './redux/trello/actions';
-
 const history = createBrowserHistory();
 const store = configureStore({}, history);
-store.dispatch(fetchMyCards());
 
 ReactDOM.render(
   <Provider store={store}>
