@@ -1,17 +1,18 @@
 export const getWikiLink = (code) => {
   const linkBaseUrl = 'https://github.com/rangle/hub/wiki/';
-  const parts = code.split('|');
-  const visibleText = parts[0];
-  const link = (parts[1] || parts[0]).replace(/\s/g, '-');
-  return `[${visibleText}](${linkBaseUrl}${link})`;
+  const names = code.split('&');
+  return names.map(name => {
+    const parts = name.split('|');
+    const visibleText = parts[0];
+    const link = (parts[1] || parts[0]).trim().replace(/\s/g, '-');
+    return `[${visibleText}](${linkBaseUrl}${link})`;
+  });
 };
 
-export const replaceWikiLinks = (body) => {
-  return body.replace(
-    /\[\[(.*?)\]\]/g,
-    (_, match) => getWikiLink(match)
-  );
-};
+export const replaceWikiLinks = (body) => body.replace(
+  /\[\[(.*?)\]\]/g,
+  (_, match) => getWikiLink(match)
+);
 
 const formatByline = byline => byline
   .split(' and ')
