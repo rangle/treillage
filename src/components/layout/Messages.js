@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Grid } from 'semantic-ui-react';
 
 import { PASS } from '../../services/rules';
 import { Button } from '../inputs/Button';
@@ -29,11 +28,11 @@ export const Messages = ({ list, handleIgnore }) => {
     case 'maxLength':
       help = (
         <div>
-          {'Got a lot to say? Try making a '}
+          {'Try making a '}
           <a href="https://docs.google.com/document/u/0/?tgif=d">Google Doc</a>
           {' Or a '}
           <a href="https://github.com/rangle/hub/wiki/_new">Wiki Article</a>
-          {'.'}
+          {' for more space.'}
         </div>
       );
       break;
@@ -48,26 +47,20 @@ export const Messages = ({ list, handleIgnore }) => {
       {list.length === 0
         ? <div style={styles.pass}>{PASS}</div>
         : list.map((message, i) => (
-          <Grid verticalAlign={'bottom'} columns="equal" key={`error-message-${i}`}>
-            <Grid.Row>
-              <Grid.Column width={14}>
-                <div style={styles.error}>{message.text}</div>
-                {renderHelp(message.rule)}
-              </Grid.Column>
-              <Grid.Column>
-                {message.options &&
-                message.options.map((option, j) => option === 'ignorable' &&
-                  <Button
-                    style={styles.button}
-                    size="mini"
-                    key={`error-${i}-option-${j}`}
-                    onClick={() => handleIgnore(message)}
-                  >
-                    {'Ignore'}
-                  </Button>)}
-              </Grid.Column>
-            </Grid.Row>
-          </Grid>
+          <div key={`error-message-${i}`}>
+            <div style={styles.error}>{message.text}</div>
+            {renderHelp(message.rule)}
+            {message.options &&
+            message.options.map((option, j) => option === 'ignorable' &&
+              <Button
+                style={styles.button}
+                size="mini"
+                key={`error-${i}-option-${j}`}
+                onClick={() => handleIgnore(message)}
+              >
+                {'Ignore'}
+              </Button>)}
+          </div>
         ))}
     </div>
   );

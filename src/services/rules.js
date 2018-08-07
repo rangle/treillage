@@ -4,8 +4,8 @@ import defaultNames from '../dictionary/names.json';
 
 export const PASS = 'Checks passed.';
 
-export default function Rules({ maxCharacterSize = 100, names = defaultNames.list }) {
-  this.maxCharacterSize = maxCharacterSize;
+export default function Rules({ maxWordCount = 100, names = defaultNames.list }) {
+  this.maxWordCount = maxWordCount;
   this.maxImageSize = {
     height: 600,
     width: 800,
@@ -14,7 +14,7 @@ export default function Rules({ maxCharacterSize = 100, names = defaultNames.lis
 
   this.errors = {
     noEmptyBody: 'This card\'s description is empty.',
-    maxLength: `This card is over ${this.maxCharacterSize} characters long, please shorten.`,
+    maxLength: (length) => `This card has ${length} words. The recommended count is ${this.maxWordCount}.`,
     singleParagraph: 'This card has multiple paragraphs.',
     nameCheck: (message) => `Possible mispellings. \n${message}`,
     maxResolution: (size) => `Image with a resolution of ${size.height}px height and ${size.width}px width.`,
@@ -26,11 +26,12 @@ export default function Rules({ maxCharacterSize = 100, names = defaultNames.lis
   };
 
   this.maxLength = (card) => {
-    const size = (card.name + ' ' + card.desc).split(' ').length;
+    const text = (card.name + ' ' + card.desc).split(' ');
 
-    return size > this.maxCharacterSize && {
+    return text.length > this.maxWordCount && {
       rule: 'maxLength',
-      text: this.errors.maxLength,
+      text: this.errors.maxLength(text.length),
+      options: ['ignorable'],
     };
   };
 
