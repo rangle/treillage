@@ -57,7 +57,7 @@ test('No mispelled names rule', t => {
 
   const error =  nameCheck(mispelledCard);
 
-  const message = `${mispelledName} - Perhaps you meant: ${correctName}`;
+  const message = `\n  ${mispelledName} - Perhaps you meant: ${correctName}`;
   t.is(error.text, errors.nameCheck(message));
 });
 

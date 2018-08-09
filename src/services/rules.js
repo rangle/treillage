@@ -4,7 +4,7 @@ import defaultNames from '../dictionary/names.json';
 
 export const PASS = 'Checks passed.';
 
-export default function Rules({ maxWordCount = 100, names = defaultNames.list }) {
+export default function Rules({ maxWordCount = 150, names = defaultNames.list }) {
   this.maxWordCount = maxWordCount;
   this.maxImageSize = {
     height: 600,
@@ -14,10 +14,12 @@ export default function Rules({ maxWordCount = 100, names = defaultNames.list })
 
   this.errors = {
     noEmptyBody: 'This card\'s description is empty.',
-    maxLength: (length) => `This card has ${length} words. The recommended count is ${this.maxWordCount}.`,
+    maxLength: (length) => `This card has ${length} words.
+    The recommended count is ${this.maxWordCount}.`,
     singleParagraph: 'This card has multiple paragraphs.',
-    nameCheck: (message) => `Possible mispellings. \n${message}`,
-    maxResolution: (size) => `Image with a resolution of ${size.height}px height and ${size.width}px width.`,
+    nameCheck: (message) => `Possible mispellings: ${message}`,
+    maxResolution: (size) => `Image size of ${size.height}px height and ${size.width}px width.
+    The maximum recommended is ${this.maxImageSize.width}px width, and/or ${this.maxImageSize.height}px height.`,
   };
 
   this.noEmptyBody = (card) => card.desc.length === 0 && {
@@ -73,7 +75,7 @@ export default function Rules({ maxWordCount = 100, names = defaultNames.list })
 
         const suggest = (suggestions) => {
           return suggestions.reduce((suggestion, { name, closeTo }) => {
-            return `${suggestion && suggestion + '\n'}${name} - Perhaps you meant: ${closeTo.join(', ')}`;
+            return `${suggestion}\n  ${name} - Perhaps you meant: ${closeTo.join(', ')}`;
           }, '');
         };
 

@@ -18,6 +18,7 @@ export const Messages = ({ list, handleIgnore }) => {
     },
     error: {
       color: 'red',
+      whiteSpace: 'pre',
     },
   };
 
@@ -28,7 +29,7 @@ export const Messages = ({ list, handleIgnore }) => {
     case 'maxLength':
       help = (
         <div>
-          {'Try making a '}
+          {'Consider making a '}
           <a href="https://docs.google.com/document/u/0/?tgif=d">Google Doc</a>
           {' Or a '}
           <a href="https://github.com/rangle/hub/wiki/_new">Wiki Article</a>
