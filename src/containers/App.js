@@ -100,7 +100,7 @@ class App extends Component {
   }
 
   handleFetchCards(filter) {
-    const { handleGetAllCards, handleGetSectionCards, handleGetMyCards } = this.props;
+    const { handleGetAllCards, handleGetSectionCards, handleGetMyCards, handleMarkdownRender } = this.props;
 
     const actions = {
       'publish': handleGetAllCards,
@@ -109,13 +109,11 @@ class App extends Component {
       'me': handleGetMyCards,
     };
 
+    filter === 'publish' ? handleMarkdownRender(false) : handleMarkdownRender(true);
     actions[filter]();
   }
 
   handleShowCards(filter) {
-    const { handleMarkdownRender } = this.props;
-
-    filter === 'publish' ? handleMarkdownRender(false) : handleMarkdownRender(true);
     this.setState({ show: filter });
     this.handleFetchCards(filter);
   }
