@@ -1,6 +1,6 @@
 import { BOARD_ID } from '../../config/trello.json';
 import { authorize, getMyCards, getMySection, getAllCards } from '../../services/api';
-import { SET_MARKDOWN_RENDER, FETCH_CARDS, LOGIN_USER } from '../constants';
+import { SET_RENDER_AS, FETCH_CARDS, LOGIN_USER } from '../constants';
 
 const asyncAction = (asyncConstants, promise, data, meta) => ({
   types: asyncConstants,
@@ -20,10 +20,12 @@ export const setContentAction = (content) => {
   };
 };
 
-export const setMarkdownRenderAction = (bool) => {
+export const setRenderAsAction = (renderAs) => {
   return {
-    type: SET_MARKDOWN_RENDER,
-    renderMarkdown: bool,
+    type: SET_RENDER_AS,
+    payload: {
+      renderAs,
+    },
   };
 };
 

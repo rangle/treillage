@@ -11,5 +11,5 @@ export const asyncConstants = (constant) => ({
 export const FETCH_CARDS = asyncConstants('@trello/FETCH_CARDS');
 export const LOGIN_USER = asyncConstants('@trello/LOGIN_USER');
 export const LOGOUT_USER = '@trello/LOGOUT_USER';
-export const SET_MARKDOWN_RENDER = '@trello/SET_MARKDOWN_RENDER';
 export const SET_CONTENT = '@trello/SET_CONTENT';
+export const SET_RENDER_AS = '@trello/SET_RENDER_AS';

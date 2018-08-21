@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button as SemanticButton } from 'semantic-ui-react';
 
-export const Button = (props) => {
+const Button = (props) => {
   const {
     children,
     className = '',
@@ -23,6 +23,15 @@ export const Button = (props) => {
       { children }
     </SemanticButton>
   );
+};
+
+const ButtonGroup = SemanticButton.Group;
+const ButtonOr = SemanticButton.Or;
+
+export {
+  Button,
+  ButtonGroup,
+  ButtonOr,
 };
 
 Button.propTypes = {

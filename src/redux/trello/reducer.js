@@ -1,10 +1,10 @@
-import { FETCH_CARDS, SET_MARKDOWN_RENDER, SET_CONTENT } from '../constants';
+import { FETCH_CARDS, SET_CONTENT, SET_RENDER_AS } from '../constants';
 import { fromJS } from 'immutable';
 
 const INITIAL_STATE = fromJS({
   content: [],
   error: {},
-  renderMarkdown: true,
+  renderAs: 'text',
   isLoading: false,
 });
 
@@ -19,13 +19,12 @@ const ACTION_HANDLERS = {
       .set('isLoading', false);
   },
   [FETCH_CARDS.FAILURE]: (state, action) => {
-    console.log(action.error);
     return state
       .set('error', new Error(action.error))
       .set('isLoading', false);
   },
-  [SET_MARKDOWN_RENDER]: (state, action) => {
-    return state.set('renderMarkdown', fromJS(action.renderMarkdown));
+  [SET_RENDER_AS]: (state, action) => {
+    return state.set('renderAs', fromJS(action.payload.renderAs));
   },
   [SET_CONTENT]: (state, action) => {
     return state.set('content', fromJS(action.payload.content));
