@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Header, Menu } from 'semantic-ui-react';
 
 import {
-  setMarkdownRenderAction,
+  setRenderAsAction,
   getAllCardsAction,
   getMySectionAction,
   getMyCardsAction,
@@ -13,19 +13,6 @@ import { Navigator } from '../components/navigator/Navigator';
 import { Content } from '../components/layout/Content';
 
 class App extends Component {
-  static propTypes = {
-    children: PropTypes.node,
-    handleMarkdownRender: PropTypes.func,
-    handleGetAllCards: PropTypes.func,
-    handleGetSectionCards: PropTypes.func,
-    handleGetMyCards: PropTypes.func,
-    router: PropTypes.shape({
-      location: PropTypes.shape({
-        hash: PropTypes.string,
-      }),
-    }),
-  }
-
   constructor(props) {
     super(props);
 
@@ -100,7 +87,7 @@ class App extends Component {
   }
 
   handleFetchCards(filter) {
-    const { handleGetAllCards, handleGetSectionCards, handleGetMyCards, handleMarkdownRender } = this.props;
+    const { handleGetAllCards, handleGetSectionCards, handleGetMyCards, handleRenderAs } = this.props;
 
     const actions = {
       'publish': handleGetAllCards,
@@ -109,7 +96,7 @@ class App extends Component {
       'me': handleGetMyCards,
     };
 
-    filter === 'publish' ? handleMarkdownRender(false) : handleMarkdownRender(true);
+    filter === 'publish' ? handleRenderAs('markdown') : handleRenderAs('text');
     actions[filter]();
   }
 
@@ -126,7 +113,7 @@ function mapStateToProps(state) {
 }
 
 const mapDispatchToProps = {
-  handleMarkdownRender: setMarkdownRenderAction,
+  handleRenderAs: setRenderAsAction,
   handleGetAllCards: getAllCardsAction,
   handleGetSectionCards: getMySectionAction,
   handleGetMyCards: getMyCardsAction,
@@ -136,3 +123,16 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps,
 )(App);
+
+App.propTypes = {
+  children: PropTypes.node,
+  handleRenderAs: PropTypes.func,
+  handleGetAllCards: PropTypes.func,
+  handleGetSectionCards: PropTypes.func,
+  handleGetMyCards: PropTypes.func,
+  router: PropTypes.shape({
+    location: PropTypes.shape({
+      hash: PropTypes.string,
+    }),
+  }),
+};

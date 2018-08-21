@@ -4,10 +4,10 @@ import marked from 'marked';
 import moment from 'moment';
 import { Dimmer, Loader } from 'semantic-ui-react';
 
+import { Options } from './layout/Options';
 import { Body } from './layout/Body';
 import { Section } from './layout/Section';
 import { Modal } from './layout/Modal';
-import { Button } from './inputs/Button';
 
 marked.setOptions({
   renderer: new marked.Renderer(),
@@ -15,7 +15,15 @@ marked.setOptions({
   smartypants: false,
 });
 
-export const Preview = ({ content, error, renderMarkdown, isLoading, handleClipboard }) => {
+export const Preview = ({
+  content,
+  error,
+  renderAs,
+  isLoading,
+  handleClipboard,
+  handleRenderAsMarkdown,
+  handleRenderAsHTML,
+}) => {
   const styles = {
     page: {
       marginTop: '6rem',
@@ -43,29 +51,29 @@ export const Preview = ({ content, error, renderMarkdown, isLoading, handleClipb
         <div>{`Trello Error: ${error.status} - ${error.responseText}`}</div>
         <div>{'Try reloading this page.'}</div>
       </Modal>
-      {!renderMarkdown &&
-        <Button
-          positive
-          floated="right"
-          onClick={() => handleClipboard(document.getElementById('content').innerText)}
-        >Copy to Clipboard
-        </Button>
-      }
+      {renderAs !== 'text' && (
+        <Options
+          handleClipboard={handleClipboard}
+          handleRenderAsMarkdown={handleRenderAsMarkdown}
+          handleRenderAsHTML={handleRenderAsHTML}
+          renderAs={renderAs}
+        />
+      )}
       <div id="content">
         {content.map((item, i) => item.isSectionHeading
-          ? (<Section key={`item-${i}`} render={renderMarkdown} item={item} />)
-          : (<Body key={`item-${i}`} render={renderMarkdown} item={item} />)
+          ? (<Section key={`item-${i}`} renderAs={renderAs} item={item} />)
+          : (<Body key={`item-${i}`} renderAs={renderAs} item={item} />)
         )}
       </div>
       {content.length === 0 && <em>No cards to show.</em>}
-      {!renderMarkdown &&
-        <Button
-          positive
-          floated="right"
-          onClick={() => handleClipboard(document.getElementById('content'))}
-        >Copy to Clipboard
-        </Button>
-      }
+      {renderAs !== 'text' && (
+        <Options
+          handleClipboard={handleClipboard}
+          handleRenderAsMarkdown={handleRenderAsMarkdown}
+          handleRenderAsHTML={handleRenderAsHTML}
+          renderAs={renderAs}
+        />
+      )}
       <div style={styles.footer}>
         <hr/>
         <div dangerouslySetInnerHTML= {{ __html: marked(`_${moment().day(1).format('MMMM D')}-${moment().day(5).format('D')}._`) }} />
@@ -77,7 +85,9 @@ export const Preview = ({ content, error, renderMarkdown, isLoading, handleClipb
 Preview.propTypes = {
   content: PropTypes.array,
   error: PropTypes.object,
-  renderMarkdown: PropTypes.bool,
+  renderAs: PropTypes.oneOf(['text', 'markdown', 'html']),
   isLoading: PropTypes.bool,
   handleClipboard: PropTypes.func,
+  handleRenderAsMarkdown: PropTypes.func,
+  handleRenderAsHTML: PropTypes.func,
 };

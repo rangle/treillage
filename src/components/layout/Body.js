@@ -4,12 +4,12 @@ import PropTypes from 'prop-types';
 import { updateCard } from '../../services/api';
 import { formatItem } from '../../utils/formatting/markdown';
 
-import { Markdown } from './Markdown';
+import { Renderer } from './Renderer';
 import { Messages } from './Messages';
 import { Button } from '../inputs/Button';
 
 
-export const Body = ({ item, render }) => {
+export const Body = ({ item, renderAs }) => {
   const styles = {
     section: {
       'backgroundColor': item.messages.length === 0 ? 'white' : 'pink',
@@ -35,11 +35,11 @@ export const Body = ({ item, render }) => {
 
   return (
     <div style={styles.section}>
-      <Markdown
-        render={render}
+      <Renderer
+        renderAs={renderAs}
         markdown={formatItem(item)}
       />
-      {render &&
+      {renderAs === 'text' &&
          <div>
            <Messages list={item.messages} handleIgnore={handleIgnore} />
            {item.messages.length === 0 &&
@@ -53,5 +53,5 @@ export const Body = ({ item, render }) => {
 
 Body.propTypes = {
   item: PropTypes.object,
-  render: PropTypes.bool,
+  renderAs: PropTypes.oneOf(['text', 'markdown', 'html']),
 };
