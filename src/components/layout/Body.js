@@ -8,7 +8,6 @@ import { Renderer } from './Renderer';
 import { Messages } from './Messages';
 import { Button } from '../inputs/Button';
 
-
 export const Body = ({ item, renderAs }) => {
   const styles = {
     section: {

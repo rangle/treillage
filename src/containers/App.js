@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Header, Menu } from 'semantic-ui-react';
+import R from 'ramda';
 
 import {
   setRenderAsAction,
@@ -12,11 +13,20 @@ import {
 import { Navigator } from '../components/navigator/Navigator';
 import { Content } from '../components/layout/Content';
 
+const tabs = ['me', 'section', 'all', 'publish'];
+const tabLabelMap = {
+  'me': 'my cards',
+  'section': 'my section',
+  'all': 'all cards',
+  'publish': 'publish',
+};
+
 class App extends Component {
   constructor(props) {
     super(props);
 
-    const activeTab = props.router.location.hash.replace('#', '') || 'me';
+    const hashLink = props.router.location.hash.replace('#', '');
+    const activeTab = R.contains(hashLink, tabs) ? hashLink : 'me';
     this.state = {
       show: activeTab,
     };
@@ -48,34 +58,16 @@ class App extends Component {
           <div style={styles.banner}>
             <Header as="h2" style={styles.header}>Rangle Weekly Preview</Header>
             <Menu inverted pointing secondary>
-              <Menu.Item
-                name="my cards"
-                active={this.state.show === 'me'}
-                link
-                href="#me"
-                onClick={() => this.handleShowCards('me')}
-              />
-              <Menu.Item
-                name="my section"
-                active={this.state.show === 'section'}
-                link
-                href="#section"
-                onClick={() => this.handleShowCards('section')}
-              />
-              <Menu.Item
-                name="all cards"
-                active={this.state.show === 'all'}
-                link
-                href="#all"
-                onClick={() => this.handleShowCards('all')}
-              />
-              <Menu.Item
-                name="publish"
-                active={this.state.show === 'publish'}
-                link
-                href="#publish"
-                onClick={() => this.handleShowCards('publish')}
-              />
+              {tabs.map(tab => (
+                <Menu.Item
+                  key={tab}
+                  name={tabLabelMap[tab]}
+                  active={this.state.show === tab}
+                  link
+                  href={`#${tab}`}
+                  onClick={() => this.handleShowCards(tab)}
+                />
+              ))}
             </Menu>
           </div>
         </Navigator>
@@ -97,6 +89,7 @@ class App extends Component {
     };
 
     filter === 'publish' ? handleRenderAs('markdown') : handleRenderAs('text');
+    console.log(filter);
     actions[filter]();
   }
 

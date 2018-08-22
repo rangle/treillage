@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Modal as SemanticModal } from 'semantic-ui-react';
+
 import { Button } from '../inputs/Button';
 
 export class Modal extends Component {

@@ -7,6 +7,7 @@ import { Dimmer, Loader } from 'semantic-ui-react';
 import { Options } from './layout/Options';
 import { Body } from './layout/Body';
 import { Section } from './layout/Section';
+import { Highlight } from './layout/Highlight';
 import { Modal } from './layout/Modal';
 
 marked.setOptions({
@@ -60,10 +61,16 @@ export const Preview = ({
         />
       )}
       <div id="content">
-        {content.map((item, i) => item.isSectionHeading
-          ? (<Section key={`item-${i}`} renderAs={renderAs} item={item} />)
-          : (<Body key={`item-${i}`} renderAs={renderAs} item={item} />)
-        )}
+        {content.map((item, i) => {
+          switch (item.section) {
+          case 'highlight':
+            return <Highlight key={`item-${i}`} renderAs={renderAs} item={item} />;
+          case 'heading':
+            return <Section key={`item-${i}`} renderAs={renderAs} item={item} />;
+          default:
+            return <Body key={`item-${i}`} renderAs={renderAs} item={item} />;
+          }
+        })}
       </div>
       {content.length === 0 && <em>No cards to show.</em>}
       {renderAs !== 'text' && (

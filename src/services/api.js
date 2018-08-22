@@ -10,7 +10,7 @@ const get = (path) => new Promise((resolve, reject) => {
 });
 
 const applyRules = (card) => {
-  if (!card.isSectionHeading) {
+  if (!card.section) {
     card.messages = [];
     const { list } = new Rules({});
 
@@ -50,7 +50,7 @@ const filterByMention = async(list) => {
   const user = await getAuthUser();
 
   return Promise.filter(list, async(card) => {
-    if (!card.isSectionHeading) {
+    if (!card.section) {
       try {
         const actions = await getActions(card);
         const match = actions.length > 0 && actions.filter(action => action.idMemberCreator === user.id);
@@ -74,8 +74,20 @@ const addAttachmentURLs = (card) => {
     }));
 };
 
-const makeSectionCard = (list) => ({
-  isSectionHeading: true,
+const makeHighlights = (lists) => {
+  const highlightCards = R.filter(hasLabel('HIGHLIGHT'), lists);
+  if (highlightCards.length > 0) {
+    lists.unshift({
+      section: 'highlight',
+      title: 'Headlines',
+      cardTitles: highlightCards.map(card => card.name),
+    });
+  }
+  return lists;
+};
+
+export const makeSectionCard = (list) => ({
+  section: 'heading',
   title: list.name.split('/')[0],
   byline: list.name.split('/')[1],
 });
@@ -98,8 +110,9 @@ const getMyCards = R.pipeP(
   Promise.all,
   R.flatten,
   R.reject(hasLabel('HOLD')),
-  R.filter((card) => card.isSectionHeading || hasLabel('APPROVED BY EDITOR')),
+  R.filter((card) => card.section || hasLabel('APPROVED BY EDITOR')),
   filterByMention,
+  makeHighlights,
   R.map(addAttachmentURLs),
   Promise.all,
   R.map(applyRules),
@@ -114,7 +127,8 @@ const getMySection = R.pipeP(
   Promise.all,
   R.flatten,
   R.reject(hasLabel('HOLD')),
-  R.filter((card) => card.isSectionHeading || hasLabel('APPROVED BY EDITOR')),
+  R.filter((card) => card.section || hasLabel('APPROVED BY EDITOR')),
+  makeHighlights,
   R.map(addAttachmentURLs),
   Promise.all,
   R.map(applyRules),
@@ -128,7 +142,8 @@ const getAllCards = R.pipeP(
   Promise.all,
   R.flatten,
   R.reject(hasLabel('HOLD')),
-  R.filter((card) => card.isSectionHeading || hasLabel('APPROVED BY EDITOR')),
+  R.filter((card) => card.section || hasLabel('APPROVED BY EDITOR')),
+  makeHighlights,
   R.map(addAttachmentURLs),
   Promise.all,
   R.map(applyRules),

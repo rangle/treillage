@@ -1,18 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { formatSectionHeader } from '../../utils/formatting/markdown';
+import { formatHighlights } from '../../utils/formatting/markdown';
 
 import { Renderer } from './Renderer';
 
-export const Section = ({ item, renderAs }) => (
+export const Highlight = ({ item, renderAs }) => (
   <Renderer
     renderAs={renderAs}
-    markdown={formatSectionHeader(item)}
+    markdown={formatHighlights(item)}
   />
 );
 
-Section.propTypes = {
+Highlight.propTypes = {
   item: PropTypes.object,
   renderAs: PropTypes.oneOf(['text', 'markdown', 'html']),
 };

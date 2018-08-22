@@ -27,6 +27,15 @@ _Section edited by ${item.byline && formatByline(item.byline)}._
 
 `;
 
+export const formatGhPageHeaderLink = (title) =>
+  title.toLowerCase().replace(/[\[\]_+.,!@#$%^&*();’\/|<>"']/g, '').replace(/(\t)|( )/g, '-');
+
+export const formatHighlights = (item) => `
+# ${item.title}
+${item.cardTitles.reduce((string, title) =>
+    string.concat(`## - [${title}](#${formatGhPageHeaderLink(title)}) \n`), '')}
+`;
+
 const addImageUrl = (item) => item.image ? `
 
 ![Item cover image](${item.image})
@@ -35,6 +44,7 @@ const addImageUrl = (item) => item.image ? `
 
 export const formatItem = (item) => `${addImageUrl(item)}
 
-__${item.title}__ ${(item.body || '').replace(/\n/g, ' ')}
+### ${item.title} 
+${(item.body || '').replace(/\n/g, ' ')}
 
 `;
