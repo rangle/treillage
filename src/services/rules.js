@@ -101,26 +101,34 @@ export default function Rules({ maxWordCount = 150, names = defaultNames.list })
       }
     }
 
-    return null;
+    return false;
   };
 
   this.maxResolution = (card) => {
-    if (!card.image) return null;
+    if (!card.image) return false;
 
     const image = new window.Image();
-    image.src = card.image;
-    const { height, width } = image;
 
-    return (
-      height > this.maxImageSize.height ||
-      width > this.maxImageSize.width
-    ) && {
-      rule: 'maxResolution',
-      text: this.errors.maxResolution({ height, width }),
-    };
+    const getImageResolution = new Promise((resolve) => {
+      image.onload = () => {
+        const { height, width } = image;
+        resolve({ height, width });
+      };
+    });
+
+    image.src = card.image;
+
+    return getImageResolution.then(({ height, width}) =>
+      (
+        height > this.maxImageSize.height ||
+        width > this.maxImageSize.width
+      ) && {
+        rule: 'maxResolution',
+        text: this.errors.maxResolution({ height, width }),
+      });
   };
 
-  this.list = [
+  return [
     this.noEmptyBody,
     this.maxLength,
     this.singleParagraph,
