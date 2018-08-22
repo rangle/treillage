@@ -4,6 +4,11 @@
 
 ## Getting Started: Writer's Guide
 
+### Labels
+
+- APPROVED BY EDITOR: Must be added on the Trello cards to make them appear on Treillage.
+- HOLD: Prevents a card from appearing on Treillage, even if it's APPROVED BY EDITOR.
+
 ### Auto wiki links
 
 To get automatic links to the [Rangle weekly](https://github.com/rangle/hub/wiki/), enclose a name with double square brackets:
