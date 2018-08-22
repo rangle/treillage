@@ -10,17 +10,25 @@ const get = (path) => new Promise((resolve, reject) => {
 });
 
 const applyRules = (card) => {
-  if (!card.isSectionHeading) {
-    card.messages = [];
-    const { list } = new Rules({});
-
-    list.forEach(rule => {
-      const error = rule(card);
-
-      if (error) card.messages.push(error);
-    });
+  if (card.isSectionHeading) {
+    return {
+      ...card,
+      messages: [],
+    };
   }
-  return card;
+
+  const { rules } = new Rules({});
+
+  return Promise.all(rules.map(rule => {
+    return Promise.resolve(rule(card))
+      .then(error => error);
+  }))
+    .then((errors) => {
+      return {
+        ...card,
+        messages: errors.filter(Boolean),
+      };
+    });
 };
 
 const getAuthUser = () => {
@@ -103,6 +111,7 @@ const getMyCards = R.pipeP(
   R.map(addAttachmentURLs),
   Promise.all,
   R.map(applyRules),
+  Promise.all,
   R.map(applyTextFormatting),
 );
 
@@ -118,6 +127,7 @@ const getMySection = R.pipeP(
   R.map(addAttachmentURLs),
   Promise.all,
   R.map(applyRules),
+  Promise.all,
   R.map(applyTextFormatting),
 );
 
@@ -132,8 +142,8 @@ const getAllCards = R.pipeP(
   R.map(addAttachmentURLs),
   Promise.all,
   R.map(applyRules),
+  Promise.all,
   R.map(applyTextFormatting),
-  // (renderedCards) => renderedCards.join('\n\n'),
 );
 
 const authorize = ({ onSuccess, onFailure }) => {

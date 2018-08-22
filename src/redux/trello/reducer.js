@@ -20,7 +20,7 @@ const ACTION_HANDLERS = {
   },
   [FETCH_CARDS.FAILURE]: (state, action) => {
     return state
-      .set('error', new Error(action.error))
+      .set('error', action.error.stack)
       .set('isLoading', false);
   },
   [SET_RENDER_AS]: (state, action) => {

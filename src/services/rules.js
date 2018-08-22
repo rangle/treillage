@@ -38,8 +38,8 @@ export default function Rules({ maxWordCount = 150, names = defaultNames.list })
   };
 
   this.singleParagraph = (card) => {
-    const spacesOnTitle = card.name.match(/\n\n./);
-    const spacesOnBody = card.desc.match(/\n\n./);
+    const spacesOnTitle = Boolean(card.name.match(/\n\n./));
+    const spacesOnBody = Boolean(card.desc.match(/\n\n./));
 
     return (spacesOnTitle || spacesOnBody) && {
       rule: 'singleParagraph',
@@ -48,79 +48,83 @@ export default function Rules({ maxWordCount = 150, names = defaultNames.list })
   };
 
   this.nameCheck = (card) => {
+    if (card.desc.length === 0) return false;
+
     const range = 0.35; // How far the name has to be to suggest a correction
+    const possibleNames = card.desc.match(new RegExp(/([A-Z][\w]*(\s+(van|von|de|da|Van))?(\s+[A-Z][\w]*))/g));
 
-    if (card.desc.length > 0) {
-      const possibleNames = card.desc.match(new RegExp(/([A-Z][\w]*(\s+(van|von|de|da|Van))?(\s+[A-Z][\w]*))/g));
+    if (!possibleNames) return false;
+    // Comments as reference:
 
-      if (possibleNames) {
-        // Comments as reference:
+    // Ideally, processing Slack/Resource Guru happens at the start of the app.
+    // The below people output has been cached as names.list
 
-        // Ideally, processing Slack/Resource Guru happens at the start of the app.
-        // The below people output has been cached as names.list
+    // const filterByRg = p => names.rg.indexOf(p.realName) !== -1;
+    // const filterByName = p => p.realName;
+    // const filterByEmail = p => p.email && p.email.split('@')[1] === 'rangle.io';
+    // const removeEmails =  p => ({ name: p.realName, username: p.name });
+    // const removeUsernames = p => new RegExp(p.name.replace(' ', '|'), 'i').test(p.username) ? p.name : ([p.name, p.username]);
+    //
+    // const people = R.flatten(names.slack
+    //   // .filter(filterByRg)
+    //   .filter(filterByName)
+    //   .filter(filterByEmail)
+    //   .map(removeEmails)
+    //   .map(removeUsernames)
+    // );
 
-        // const filterByRg = p => names.rg.indexOf(p.realName) !== -1;
-        // const filterByName = p => p.realName;
-        // const filterByEmail = p => p.email && p.email.split('@')[1] === 'rangle.io';
-        // const removeEmails =  p => ({ name: p.realName, username: p.name });
-        // const removeUsernames = p => new RegExp(p.name.replace(' ', '|'), 'i').test(p.username) ? p.name : ([p.name, p.username]);
-        //
-        // const people = R.flatten(names.slack
-        //   // .filter(filterByRg)
-        //   .filter(filterByName)
-        //   .filter(filterByEmail)
-        //   .map(removeEmails)
-        //   .map(removeUsernames)
-        // );
+    const suggest = (suggestions) => {
+      return suggestions.reduce((suggestion, { name, closeTo }) => {
+        return `${suggestion}\n  ${name} - Perhaps you meant: ${closeTo.join(', ')}`;
+      }, '');
+    };
 
-        const suggest = (suggestions) => {
-          return suggestions.reduce((suggestion, { name, closeTo }) => {
-            return `${suggestion}\n  ${name} - Perhaps you meant: ${closeTo.join(', ')}`;
-          }, '');
-        };
+    const message = suggest(
+      possibleNames
+        .filter(possibleName => this.names.indexOf(possibleName) === -1)
+        .map(possibleName => {
+          const levenTreshold = Math.round(possibleName.length * range);
 
-        const message = suggest(
-          possibleNames
-            .filter(possibleName => this.names.indexOf(possibleName) === -1)
-            .map(possibleName => {
-              const levenTreshold = Math.round(possibleName.length * range);
+          return {
+            name: possibleName,
+            closeTo: this.names.filter(name => leven(possibleName, name) < levenTreshold),
+          };
+        })
+        .filter(possibleMatch => possibleMatch.closeTo && possibleMatch.closeTo.length > 0)
+    );
 
-              return {
-                name: possibleName,
-                closeTo: this.names.filter(name => leven(possibleName, name) < levenTreshold),
-              };
-            })
-            .filter(possibleMatch => possibleMatch.closeTo && possibleMatch.closeTo.length > 0)
-        );
-
-        return message && {
-          rule: 'nameCheck',
-          text: this.errors.nameCheck(message),
-          options: ['ignorable'],
-        };
-      }
-    }
-
-    return null;
-  };
-
-  this.maxResolution = (card) => {
-    if (!card.image) return null;
-
-    const image = new window.Image();
-    image.src = card.image;
-    const { height, width } = image;
-
-    return (
-      height > this.maxImageSize.height ||
-      width > this.maxImageSize.width
-    ) && {
-      rule: 'maxResolution',
-      text: this.errors.maxResolution({ height, width }),
+    return Boolean(message) && {
+      rule: 'nameCheck',
+      text: this.errors.nameCheck(message),
+      options: ['ignorable'],
     };
   };
 
-  this.list = [
+  this.maxResolution = (card) => {
+    if (!card.image) return false;
+
+    const image = new window.Image();
+
+    const getImageResolution = new Promise((resolve) => {
+      image.onload = () => {
+        const { height, width } = image;
+        resolve({ height, width });
+      };
+    });
+
+    image.src = card.image;
+
+    return getImageResolution.then(({ height, width}) =>
+      (
+        height > this.maxImageSize.height ||
+        width > this.maxImageSize.width
+      ) && {
+        rule: 'maxResolution',
+        text: this.errors.maxResolution({ height, width }),
+      });
+  };
+
+  this.rules = [
     this.noEmptyBody,
     this.maxLength,
     this.singleParagraph,
