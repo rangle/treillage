@@ -17,7 +17,7 @@ const applyRules = (card) => {
     };
   }
 
-  const rules = new Rules({});
+  const { rules } = new Rules({});
 
   return Promise.all(rules.map(rule => {
     return Promise.resolve(rule(card))

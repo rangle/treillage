@@ -10,7 +10,7 @@ const card = {
   },
 };
 
-test('No empty body rule', t => {
+test('No empty body rule should return the expected error', t => {
   const { noEmptyBody, errors } = new Rules({});
   const emptyBodyCard = {
     ...card,
@@ -22,7 +22,19 @@ test('No empty body rule', t => {
   t.is(error.text, errors.noEmptyBody);
 });
 
-test('No long card rule',  t => {
+test('No empty body rule should return no error (false)', t => {
+  const { noEmptyBody } = new Rules({});
+  const bodyCard = {
+    ...card,
+    desc: 'this is a body',
+  };
+
+  const error = noEmptyBody(bodyCard);
+
+  t.is(error, false);
+});
+
+test('No long card rule should return the expected error',  t => {
   const { maxLength, errors } = new Rules({ maxWordCount: 2 });
   const longCard = {
     ...card,
@@ -35,7 +47,20 @@ test('No long card rule',  t => {
   t.is(error.text, errors.maxLength(4));
 });
 
-test('Single paragraph rule', t => {
+test('No long card rule should return no error (false)',  t => {
+  const { maxLength } = new Rules({ maxWordCount: 2 });
+  const shortCard = {
+    ...card,
+    name: 'song',
+    desc: 'two',
+  };
+
+  const error = maxLength(shortCard);
+
+  t.is(error, false);
+});
+
+test('Single paragraph rule should return the expected error', t => {
   const { singleParagraph, errors } = new Rules({});
   const multiParagraphCard = {
     ...card,
@@ -45,7 +70,17 @@ test('Single paragraph rule', t => {
   t.is(error.text, errors.singleParagraph);
 });
 
-test('No mispelled names rule', t => {
+test('Single paragraph rule should return no error (false)', t => {
+  const { singleParagraph } = new Rules({});
+  const singleParagraphCard = {
+    ...card,
+    desc: 'single paragraph',
+  };
+  const error = singleParagraph(singleParagraphCard);
+  t.is(error, false);
+});
+
+test('No mispelled names rule should return the expected error', t => {
   const mispelledName = 'Rickard McClinton';
   const correctName = 'Richard McClintock';
   const otherNames = ['Ricardo Maquinto', 'Richard Lionheart'];
@@ -61,13 +96,11 @@ test('No mispelled names rule', t => {
   t.is(error.text, errors.nameCheck(message));
 });
 
-test('Valid card should pass all rules', t => {
-  const { list } = new Rules({});
-  t.plan(list.length);
+test('No mispelled names rule should return no error (false)', t => {
+  const correctName = 'Richard McClintock';
+  const { nameCheck } = new Rules({ names: [correctName] });
 
-  list.forEach(rule => {
-    const error = rule(card);
+  const error =  nameCheck(card);
 
-    t.falsy(error);
-  });
+  t.is(error, false);
 });
