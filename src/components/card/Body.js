@@ -39,7 +39,7 @@ export const Body = ({ item, renderAs }) => {
         renderAs={renderAs}
         markdown={formatItem(item)}
       />
-      {renderAs === 'text' &&
+      {renderAs === 'preview' &&
          <div>
            <Suggestions suggestions={item.suggestions} handleIgnore={handleIgnore} />
            {item.suggestions.length === 0 &&
@@ -53,5 +53,5 @@ export const Body = ({ item, renderAs }) => {
 
 Body.propTypes = {
   item: PropTypes.object,
-  renderAs: PropTypes.oneOf(['text', 'markdown', 'html']),
+  renderAs: PropTypes.oneOf(['preview', 'markdown', 'html']),
 };

@@ -40,5 +40,5 @@ Options.propTypes = {
   handleClipboard: PropTypes.func,
   handleRenderAsMarkdown: PropTypes.func,
   handleRenderAsHTML: PropTypes.func,
-  renderAs: PropTypes.oneOf(['text', 'markdown', 'html']),
+  renderAs: PropTypes.oneOf(['preview', 'markdown', 'html']),
 };

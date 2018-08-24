@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 
 import { enforceBlockquote, enforceHorizontalRule, replaceWikiLinks } from '../../utils/formatting/markdown';
 
-const renderAsText = (markdown) => (
+const renderAsPreview = (markdown) => (
   <div
     dangerouslySetInnerHTML= {{ __html: marked(replaceWikiLinks(markdown)) }} />
 );
@@ -26,7 +26,7 @@ const renderAsHTML = (markdown) => {
 };
 
 const rendererMap = {
-  text: renderAsText,
+  preview: renderAsPreview,
   markdown: renderAsMarkdown,
   html: renderAsHTML,
 };
@@ -36,5 +36,5 @@ export const Renderer = ({ markdown, renderAs }) =>
 
 Renderer.propTypes = {
   markdown: PropTypes.string,
-  renderAs: PropTypes.oneOf(['text', 'markdown', 'html']),
+  renderAs: PropTypes.oneOf(['preview', 'markdown', 'html']),
 };

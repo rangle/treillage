@@ -12,5 +12,5 @@ export const Section = ({ item, renderAs }) => (
 
 Section.propTypes = {
   item: PropTypes.object,
-  renderAs: PropTypes.oneOf(['text', 'markdown', 'html']),
+  renderAs: PropTypes.oneOf(['preview', 'markdown', 'html']),
 };

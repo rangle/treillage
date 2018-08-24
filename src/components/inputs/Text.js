@@ -31,7 +31,7 @@ Text.propTypes = {
 };
 
 Text.defaultProps = {
-  type: 'text',
+  type: 'preview',
   style: {},
   placeholder: '',
 };

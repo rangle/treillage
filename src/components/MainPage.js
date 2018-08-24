@@ -55,7 +55,7 @@ export class MainPage extends Component {
 MainPage.propTypes = {
   content: PropTypes.array.isRequired,
   error: PropTypes.object,
-  renderAs: PropTypes.oneOf(['text', 'markdown', 'html']),
+  renderAs: PropTypes.oneOf(['preview', 'markdown', 'html']),
   isLoading: PropTypes.bool.isRequired,
   handleRenderAs: PropTypes.func,
 };
