@@ -4,7 +4,7 @@ import { fromJS } from 'immutable';
 const INITIAL_STATE = fromJS({
   content: [],
   error: {},
-  renderAs: 'text',
+  renderAs: 'preview',
   isLoading: false,
 });
 

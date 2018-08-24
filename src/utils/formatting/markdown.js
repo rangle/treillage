@@ -40,7 +40,7 @@ __${item.title}__ ${(item.body || '').replace(/\n/g, ' ')}
 `;
 
 export const enforceBlockquote = (markdown) =>
-  markdown.replace(/>/g, '\n>');
+  markdown.replace(/[^(\n)>]>/g, '\n>');
 
 export const enforceHorizontalRule = (markdown) =>
-  markdown.replace(/\*\*\*|---|___/g, '\n ___');
+  markdown.replace(/[^(\n)(\*\*\*|\-\-\-|___)](\*\*\*|---|___)/g, '\n ___');

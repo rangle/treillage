@@ -1,4 +1,3 @@
-// import R from 'ramda';
 import leven from 'leven';
 import defaultNames from '../dictionary/names.json';
 
@@ -54,24 +53,6 @@ export default function Rules({ maxWordCount = 150, names = defaultNames.list })
     const possibleNames = card.desc.match(new RegExp(/([A-Z][\w]*(\s+(van|von|de|da|Van))?(\s+[A-Z][\w]*))/g));
 
     if (!possibleNames) return false;
-    // Comments as reference:
-
-    // Ideally, processing Slack/Resource Guru happens at the start of the app.
-    // The below people output has been cached as names.list
-
-    // const filterByRg = p => names.rg.indexOf(p.realName) !== -1;
-    // const filterByName = p => p.realName;
-    // const filterByEmail = p => p.email && p.email.split('@')[1] === 'rangle.io';
-    // const removeEmails =  p => ({ name: p.realName, username: p.name });
-    // const removeUsernames = p => new RegExp(p.name.replace(' ', '|'), 'i').test(p.username) ? p.name : ([p.name, p.username]);
-    //
-    // const people = R.flatten(names.slack
-    //   // .filter(filterByRg)
-    //   .filter(filterByName)
-    //   .filter(filterByEmail)
-    //   .map(removeEmails)
-    //   .map(removeUsernames)
-    // );
 
     const suggest = (suggestions) => {
       return suggestions.reduce((suggestion, { name, closeTo }) => {

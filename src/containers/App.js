@@ -96,7 +96,7 @@ class App extends Component {
       'me': handleGetMyCards,
     };
 
-    filter === 'publish' ? handleRenderAs('markdown') : handleRenderAs('text');
+    filter === 'publish' ? handleRenderAs('markdown') : handleRenderAs('preview');
     actions[filter]();
   }
 

@@ -15,6 +15,7 @@ marked.setOptions({
   smartypants: false,
 });
 
+// TODO: This is a temporary fix; this won't be possible in the Markdown display.
 const htmlStyles = () => (
   <pre>
     {`
@@ -69,7 +70,7 @@ export const Preview = ({
         <div>{`Trello Error: ${error.status} - ${error.responseText}`}</div>
         <div>{'Try reloading this page.'}</div>
       </Modal>
-      {renderAs !== 'text' && (
+      {renderAs !== 'preview' && (
         <Options
           handleClipboard={handleClipboard}
           handleRenderAsMarkdown={handleRenderAsMarkdown}
@@ -85,7 +86,7 @@ export const Preview = ({
         )}
       </div>
       {content.length === 0 && <em>No cards to show.</em>}
-      {renderAs !== 'text' && (
+      {renderAs !== 'preview' && (
         <Options
           handleClipboard={handleClipboard}
           handleRenderAsMarkdown={handleRenderAsMarkdown}
@@ -104,7 +105,7 @@ export const Preview = ({
 Preview.propTypes = {
   content: PropTypes.array,
   error: PropTypes.object,
-  renderAs: PropTypes.oneOf(['text', 'markdown', 'html']),
+  renderAs: PropTypes.oneOf(['preview', 'markdown', 'html']),
   isLoading: PropTypes.bool,
   handleClipboard: PropTypes.func,
   handleRenderAsMarkdown: PropTypes.func,
