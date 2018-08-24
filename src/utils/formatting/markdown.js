@@ -38,3 +38,9 @@ export const formatItem = (item) => `${addImageUrl(item)}
 __${item.title}__ ${(item.body || '').replace(/\n/g, ' ')}
 
 `;
+
+export const enforceBlockquote = (markdown) =>
+  markdown.replace(/>/g, '\n>');
+
+export const enforceHorizontalRule = (markdown) =>
+  markdown.replace(/\*\*\*|---|___/g, '\n ___');

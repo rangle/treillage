@@ -5,14 +5,14 @@ import { updateCard } from '../../services/api';
 import { formatItem } from '../../utils/formatting/markdown';
 
 import { Renderer } from './Renderer';
-import { Messages } from './Messages';
+import { Suggestions } from './Suggestions';
 import { Button } from '../inputs/Button';
 
 
 export const Body = ({ item, renderAs }) => {
   const styles = {
     section: {
-      'backgroundColor': item.messages.length === 0 ? 'white' : 'pink',
+      'backgroundColor': item.suggestions.length === 0 ? 'white' : 'pink',
       'border': '1px solid gray',
       'padding': '1em',
       'marginBottom': '16px',
@@ -30,7 +30,7 @@ export const Body = ({ item, renderAs }) => {
   };
 
   const handleIgnore = (message) => {
-    item.messages.splice(item.messages.indexOf(message));
+    item.suggestions.splice(item.suggestions.indexOf(message));
   };
 
   return (
@@ -41,8 +41,8 @@ export const Body = ({ item, renderAs }) => {
       />
       {renderAs === 'text' &&
          <div>
-           <Messages list={item.messages} handleIgnore={handleIgnore} />
-           {item.messages.length === 0 &&
+           <Suggestions suggestions={item.suggestions} handleIgnore={handleIgnore} />
+           {item.suggestions.length === 0 &&
              <Button positive onClick={ () => updateCard(item.id) }>{'Approve'}</Button>
            }
          </div>

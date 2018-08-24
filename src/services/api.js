@@ -13,7 +13,7 @@ const applyRules = (card) => {
   if (card.isSectionHeading) {
     return {
       ...card,
-      messages: [],
+      suggestions: [],
     };
   }
 
@@ -26,7 +26,7 @@ const applyRules = (card) => {
     .then((errors) => {
       return {
         ...card,
-        messages: errors.filter(Boolean),
+        suggestions: errors.filter(Boolean),
       };
     });
 };
