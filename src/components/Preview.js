@@ -4,9 +4,9 @@ import marked from 'marked';
 import moment from 'moment';
 import { Dimmer, Loader } from 'semantic-ui-react';
 
-import { Options } from './layout/Options';
-import { Body } from './layout/Body';
-import { Section } from './layout/Section';
+import { Options } from './card/Options';
+import { Body } from './card/Body';
+import { Section } from './card/Section';
 import { Modal } from './layout/Modal';
 
 marked.setOptions({

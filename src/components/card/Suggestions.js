@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { PASS } from '../../services/rules';
 import { Button } from '../inputs/Button';
 
-export const Messages = ({ list, handleIgnore }) => {
+export const Suggestions = ({ suggestions, handleIgnore }) => {
   const styles = {
     message: {
       fontSize: '14px',
@@ -45,19 +45,19 @@ export const Messages = ({ list, handleIgnore }) => {
 
   return (
     <div style={styles.message}>
-      {list.length === 0
+      {suggestions.length === 0
         ? <div style={styles.pass}>{PASS}</div>
-        : list.map((message, i) => (
-          <div key={`error-message-${i}`}>
-            <div style={styles.error}>{message.text}</div>
-            {renderHelp(message.rule)}
-            {message.options &&
-            message.options.map((option, j) => option === 'ignorable' &&
+        : suggestions.map((suggestion, i) => (
+          <div key={`rule-suggestion-${i}`}>
+            <div style={styles.error}>{suggestion.text}</div>
+            {renderHelp(suggestion.rule)}
+            {suggestion.options &&
+            suggestion.options.map((option, j) => option === 'ignorable' &&
               <Button
                 style={styles.button}
                 size="mini"
-                key={`error-${i}-option-${j}`}
-                onClick={() => handleIgnore(message)}
+                key={`suggestion-${i}-option-${j}`}
+                onClick={() => handleIgnore(suggestion)}
               >
                 {'Ignore'}
               </Button>)}
@@ -67,7 +67,7 @@ export const Messages = ({ list, handleIgnore }) => {
   );
 };
 
-Messages.propTypes = {
-  list: PropTypes.array,
+Suggestions.propTypes = {
+  suggestions: PropTypes.array,
   handleIgnore: PropTypes.func,
 };
