@@ -28,19 +28,19 @@ _Section edited by ${item.byline && formatByline(item.byline)}._
 `;
 
 const addImageUrl = (item) => item.image ? `
-
 ![Item cover image](${item.image})
-
 ` : '';
 
 export const formatItem = (item) => `${addImageUrl(item)}
 
-__${item.title}__ ${(item.body || '').replace(/\n/g, ' ')}
+__${item.title}__ ${(item.body || '')}
 
 `;
 
+// TODO: Used when single paragraph was enforced, as an exception to accept these.
+//       Decide whether multiple or single paragraphs will be the norm.
 export const enforceBlockquote = (markdown) =>
   markdown.replace(/[^(\n)>]>/g, '\n>');
 
 export const enforceHorizontalRule = (markdown) =>
-  markdown.replace(/[^(\n)(\*\*\*|\-\-\-|___)](\*\*\*|---|___)/g, '\n ___');
+  markdown.replace(/[^(\n)(\*\*\*|\-\-\-|___)](\*\*\*|---|___)/g, '\n___');
