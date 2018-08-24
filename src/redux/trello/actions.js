@@ -1,8 +1,7 @@
-// import { BOARD_ID } from '../../config/trello.json';
+import { BOARD_ID } from '../../config/trello.json';
 import { authorize, getMyCards, getMySection, getAllCards } from '../../services/api';
 import { SET_RENDER_AS, FETCH_CARDS, LOGIN_USER } from '../constants';
 
-const BOARD_ID = '5b9689c95c709c7372b258a8';
 
 const asyncAction = (asyncConstants, promise, data, meta) => ({
   types: asyncConstants,

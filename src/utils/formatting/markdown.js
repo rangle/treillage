@@ -31,6 +31,7 @@ const addImageUrls = (item) => item.images ? item.images.map((image, i) => `![It
 
 export const formatItem = (item) => `${addImageUrls(item)}
 
+
 __${item.title}__ ${(item.body || '')}
 
 `;
