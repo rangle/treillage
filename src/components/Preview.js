@@ -15,6 +15,24 @@ marked.setOptions({
   smartypants: false,
 });
 
+const htmlStyles = () => (
+  <pre>
+    {`
+<style>
+  img {
+    width: 600px;
+  }
+
+  @media(max-width: 768px) {
+    img {
+      width: 300px;
+    }
+  }
+</style>
+    `}
+  </pre>
+);
+
 export const Preview = ({
   content,
   error,
@@ -60,6 +78,7 @@ export const Preview = ({
         />
       )}
       <div id="content">
+        {renderAs === 'html' && htmlStyles()}
         {content.map((item, i) => item.isSectionHeading
           ? (<Section key={`item-${i}`} renderAs={renderAs} item={item} />)
           : (<Body key={`item-${i}`} renderAs={renderAs} item={item} />)

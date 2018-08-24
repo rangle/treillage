@@ -4,7 +4,7 @@ import showdown from 'showdown';
 import emoji from 'node-emoji';
 import PropTypes from 'prop-types';
 
-import { replaceWikiLinks } from '../../utils/formatting/markdown';
+import { enforceBlockquote, enforceHorizontalRule, replaceWikiLinks } from '../../utils/formatting/markdown';
 
 const renderAsText = (markdown) => (
   <div
@@ -19,7 +19,9 @@ const renderAsHTML = (markdown) => {
   const converter = new showdown.Converter();
 
   return (
-    <pre style={{ whiteSpace: 'pre-wrap' }}>{converter.makeHtml(replaceWikiLinks(markdown))}</pre>
+    <pre style={{ whiteSpace: 'pre-wrap' }}>
+      {converter.makeHtml(replaceWikiLinks(markdown))}
+    </pre>
   );
 };
 
@@ -29,7 +31,8 @@ const rendererMap = {
   html: renderAsHTML,
 };
 
-export const Renderer = ({ markdown, renderAs }) => rendererMap[renderAs](emoji.emojify(markdown));
+export const Renderer = ({ markdown, renderAs }) =>
+  rendererMap[renderAs](emoji.emojify(enforceBlockquote(enforceHorizontalRule(markdown))));
 
 Renderer.propTypes = {
   markdown: PropTypes.string,
