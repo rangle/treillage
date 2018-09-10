@@ -29,7 +29,6 @@ Treillage features _rules_:
 To get automatic links to the [Rangle Wiki](https://github.com/rangle/hub/wiki/), enclose a name with double square brackets:
 - `[[ Actual Name ]]`
 - `[[ Nickname | Actual Name ]]`
-- `[[ Name One & Name Two & Thirdy | Name Three]]`
 
 
 ## Getting Started: Developer's Guide
