@@ -73,6 +73,13 @@ const filterByMention = async(list) => {
     .then(filtered => filtered);
 };
 
+const filterSectionByApprovedCardsOnly = async(list) => {
+  return list.filter((el, i) => {
+    // checks
+    return !(((i + 1) === list.length && el.isSectionHeading) || (list[i].isSectionHeading && list[i + 1].isSectionHeading));
+  });
+};
+
 const addAttachmentURLs = (card) => {
   if (!card.idAttachmentCover) return card;
 
@@ -124,6 +131,7 @@ const getMySection = R.pipeP(
   R.flatten,
   R.filter((card) => card.isSectionHeading || hasLabel('APPROVED BY EDITOR')),
   R.reject(hasLabel('HOLD')),
+  filterSectionByApprovedCardsOnly,
   R.map(addAttachmentURLs),
   Promise.all,
   R.map(applyRules),
@@ -139,6 +147,7 @@ const getAllCards = R.pipeP(
   R.flatten,
   R.filter((card) => card.isSectionHeading || hasLabel('APPROVED BY EDITOR')),
   R.reject(hasLabel('HOLD')),
+  filterSectionByApprovedCardsOnly,
   R.map(addAttachmentURLs),
   Promise.all,
   R.map(applyRules),
