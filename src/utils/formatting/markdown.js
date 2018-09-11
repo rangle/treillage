@@ -1,4 +1,4 @@
-export const getWikiLink = (name) => {
+const getWikiLink = (name) => {
   const linkBaseUrl = 'https://github.com/rangle/hub/wiki/';
   const parts = name.split('|').map(nameText => nameText.trim());
   const visibleText = parts[0];

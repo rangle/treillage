@@ -1,5 +1,5 @@
 import test from 'ava';
-import { getWikiLink, formatSectionHeader } from './markdown';
+import { formatSectionHeader, replaceWikiLinks } from './markdown';
 
 test('header is correct format with &', t => {
   const item1 = {
@@ -57,18 +57,29 @@ _Section edited by [[Bob Vance]]._
 `, formatSectionHeader(item1));
 });
 
-test('getWikiLink: wiki link making with a normal name', t => {
-  const linkBaseUrl = 'https://github.com/rangle/hub/wiki/';
-  t.deepEqual(`[Bob Vance](${linkBaseUrl}Bob-Vance)`, getWikiLink('Bob Vance'));
+test('replaceWikiLinks: replacing a name', t => {
+  const markdownString = '[[ Rango Io ]]';
+  t.deepEqual('[Rango Io](https://github.com/rangle/hub/wiki/Rango-Io)', replaceWikiLinks(markdownString));
 });
 
-test('getWikiLink: wiki link making with name + nickname', t => {
-  const linkBaseUrl = 'https://github.com/rangle/hub/wiki/';
-  t.deepEqual(`[Bobby](${linkBaseUrl}Bob-Vance)`, getWikiLink('Bobby | Bob Vance'));
+test('replaceWikiLinks: replace name with additional text', t => {
+  const markdownString = 'Hey, [[ Rango Io ]] is an amazing Developer';
+  t.deepEqual('Hey, [Rango Io](https://github.com/rangle/hub/wiki/Rango-Io) is an amazing Developer', replaceWikiLinks(markdownString));
 });
 
-test('getWikiLink: formation with ampersand', t => {
-  const linkBaseUrl = 'https://github.com/rangle/hub/wiki/';
-  t.deepEqual(`[Bobby Orr & Bob Vance](${linkBaseUrl}Bobby-Orr-&-Bob-Vance)`, getWikiLink('Bobby Orr & Bob Vance'));
+test('replaceWikiLinks: replace name without spacing', t => {
+  const markdownString = '[[Rango Io]] is an amazing Developer';
+  t.deepEqual('[Rango Io](https://github.com/rangle/hub/wiki/Rango-Io) is an amazing Developer', replaceWikiLinks(markdownString));
 });
+
+test('replaceWikiLinks: replace name with a nickname', t => {
+  const markdownString = '[[ Ra | Rango Io]] is an amazing Developer';
+  t.deepEqual('[Ra](https://github.com/rangle/hub/wiki/Rango-Io) is an amazing Developer', replaceWikiLinks(markdownString));
+});
+
+test('replaceWikiLinks: single name no space', t => {
+  const markdownString = '[[Ranny|Rango]] is an amazing Developer';
+  t.deepEqual('[Ranny](https://github.com/rangle/hub/wiki/Rango) is an amazing Developer', replaceWikiLinks(markdownString));
+});
+
 
