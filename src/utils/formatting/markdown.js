@@ -27,11 +27,9 @@ _Section edited by ${item.byline && formatByline(item.byline)}._
 
 `;
 
-const addImageUrl = (item) => item.image ? `
-![Item cover image](${item.image})
-` : '';
+const addImageUrls = (item) => item.images ? item.images.map((image, i) => `![Item image${i}](${image})`).join('\n') : '';
 
-export const formatItem = (item) => `${addImageUrl(item)}
+export const formatItem = (item) => `${addImageUrls(item)}
 
 __${item.title}__ ${(item.body || '')}
 

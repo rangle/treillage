@@ -74,12 +74,10 @@ const filterByMention = async(list) => {
 };
 
 const addAttachmentURLs = (card) => {
-  if (!card.idAttachmentCover) return card;
-
-  return get(`/cards/${card.id}/attachments/${card.idAttachmentCover}`)
-    .then(attachment => R.merge(card, {
-      image: attachment.url,
-    }));
+  if (card.isSectionHeading) return card;
+  return R.merge(card, {
+    images: card.attachments.map(attachment => attachment.url),
+  });
 };
 
 const makeSectionCard = (list) => ({
@@ -88,7 +86,7 @@ const makeSectionCard = (list) => ({
   byline: list.name.split('/')[1],
 });
 
-const getList = (list) => get(`/lists/${list.id}/cards`)
+const getList = (list) => get(`/lists/${list.id}/cards?attachments=true`)
   .then((cards) => cards.length ?
     R.flatten([makeSectionCard(list), cards])
     : []
@@ -109,7 +107,6 @@ const getMyCards = R.pipeP(
   R.reject(hasLabel('HOLD')),
   filterByMention,
   R.map(addAttachmentURLs),
-  Promise.all,
   R.map(applyRules),
   Promise.all,
   R.map(applyTextFormatting),
@@ -125,7 +122,6 @@ const getMySection = R.pipeP(
   R.filter((card) => card.isSectionHeading || hasLabel('APPROVED BY EDITOR')),
   R.reject(hasLabel('HOLD')),
   R.map(addAttachmentURLs),
-  Promise.all,
   R.map(applyRules),
   Promise.all,
   R.map(applyTextFormatting),
@@ -140,7 +136,6 @@ const getAllCards = R.pipeP(
   R.filter((card) => card.isSectionHeading || hasLabel('APPROVED BY EDITOR')),
   R.reject(hasLabel('HOLD')),
   R.map(addAttachmentURLs),
-  Promise.all,
   R.map(applyRules),
   Promise.all,
   R.map(applyTextFormatting),
