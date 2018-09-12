@@ -73,9 +73,8 @@ const filterByMention = async(list) => {
     .then(filtered => filtered);
 };
 
-const filterSectionByApprovedCardsOnly = async(list) => {
+const filterNonEmptySections = async(list) => {
   return list.filter((el, i) => {
-    // checks
     return !(((i + 1) === list.length && el.isSectionHeading) || (list[i].isSectionHeading && list[i + 1].isSectionHeading));
   });
 };
@@ -112,7 +111,7 @@ const getMyCards = R.pipeP(
   R.map(getList),
   Promise.all,
   R.flatten,
-  R.filter((card) => card.isSectionHeading || hasLabel('APPROVED BY EDITOR')),
+  R.filter((card) => card.isSectionHeading || hasLabel('APPROVED BY EDITOR')(card)),
   R.reject(hasLabel('HOLD')),
   filterByMention,
   R.map(addAttachmentURLs),
@@ -129,9 +128,9 @@ const getMySection = R.pipeP(
   R.map(getList),
   Promise.all,
   R.flatten,
-  R.filter((card) => card.isSectionHeading || hasLabel('APPROVED BY EDITOR')),
+  R.filter((card) => card.isSectionHeading || hasLabel('APPROVED BY EDITOR')(card)),
   R.reject(hasLabel('HOLD')),
-  filterSectionByApprovedCardsOnly,
+  filterNonEmptySections,
   R.map(addAttachmentURLs),
   Promise.all,
   R.map(applyRules),
@@ -145,9 +144,9 @@ const getAllCards = R.pipeP(
   R.map(getList),
   Promise.all,
   R.flatten,
-  R.filter((card) => card.isSectionHeading || hasLabel('APPROVED BY EDITOR')),
+  R.filter((card) => card.isSectionHeading || hasLabel('APPROVED BY EDITOR')(card)),
   R.reject(hasLabel('HOLD')),
-  filterSectionByApprovedCardsOnly,
+  filterNonEmptySections,
   R.map(addAttachmentURLs),
   Promise.all,
   R.map(applyRules),
