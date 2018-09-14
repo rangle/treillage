@@ -75,10 +75,9 @@ const filterByMention = async(list) => {
 
 const filterNonEmptySections = (list) => {
   return list.filter((card, i) => {
-    if ((card.isSectionHeading) && (list.length === (i + 1) || list[i + 1].isSectionHeading)) {
-      return false;
-    }
-    return true;
+    if (!card.isSectionHeading) return true;
+
+    return (list.length !== (i + 1)) && (!list[i + 1].isSectionHeading);
   });
 };
 
